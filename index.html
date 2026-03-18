@@ -1,0 +1,2032 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Welcome to OKC | Van Horn Homes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet">
+<style>
+:root {
+  --apricot: #CFAE9B;
+  --charcoal: #65696E;
+  --cream: #EFEDE7;
+  --mist: #DDE3E8;
+  --slate: #B5C4CE;
+  --nude: #E7D6C9;
+  --white: #FFFFFF;
+  --black: #1a1a1a;
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; overflow-x: hidden; }
+body {
+  font-family: var(--font-sans);
+  color: var(--charcoal);
+  background: var(--white);
+  line-height: 1.6;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+img { max-width: 100%; height: auto; display: block; }
+a { color: var(--charcoal); text-decoration: none; }
+a:hover { color: var(--apricot); }
+ul { list-style: none; }
+h1, h2, h3, h4 { font-family: var(--font-serif); font-weight: 400; }
+.container { max-width: 1100px; margin: 0 auto; padding: 0 1.25rem; }
+
+/* ===== FLOATING TOC BUTTON ===== */
+.toc-btn {
+  position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 1000;
+  width: 56px; height: 56px; border-radius: 50%;
+  background: var(--charcoal); color: var(--white);
+  border: none; cursor: pointer; font-size: 0.65rem;
+  font-family: var(--font-sans); font-weight: 500;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  transition: all 0.3s ease; display: flex; align-items: center; justify-content: center;
+}
+.toc-btn:hover { background: var(--apricot); transform: scale(1.05); }
+.toc-btn.active { background: var(--apricot); }
+
+/* ===== TOC OVERLAY ===== */
+.toc-overlay {
+  position: fixed; inset: 0; z-index: 999;
+  background: rgba(255,255,255,0.97);
+  backdrop-filter: blur(20px);
+  opacity: 0; visibility: hidden;
+  transition: all 0.4s ease;
+  display: flex; align-items: center; justify-content: center;
+  padding: 2rem;
+}
+.toc-overlay.open { opacity: 1; visibility: visible; }
+.toc-close {
+  position: absolute; top: 1.5rem; right: 1.5rem;
+  background: none; border: none; cursor: pointer;
+  font-size: 1.5rem; color: var(--charcoal); padding: 0.5rem;
+}
+.toc-inner { text-align: center; max-width: 500px; width: 100%; }
+.toc-title {
+  font-family: var(--font-serif); font-size: 1.5rem;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  margin-bottom: 2rem; color: var(--charcoal);
+}
+.toc-list { display: flex; flex-direction: column; gap: 0.25rem; }
+.toc-list a {
+  display: block; padding: 0.75rem 1rem;
+  font-size: 0.8rem; font-weight: 500;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--charcoal); border-bottom: 1px solid rgba(101,105,110,0.1);
+  transition: all 0.2s;
+}
+.toc-list a:hover { color: var(--apricot); padding-left: 1.5rem; }
+
+/* ===== HERO / COVER ===== */
+.hero {
+  position: relative; min-height: 100vh; min-height: 100svh;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  padding: 2rem 1.25rem; overflow: hidden;
+}
+.hero-bg {
+  position: absolute; inset: 0; z-index: -1;
+}
+.hero-bg img {
+  width: 100%; height: 100%; object-fit: cover;
+  opacity: 0.35;
+}
+.hero-bg::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(to bottom, rgba(239,237,231,0) 0%, rgba(239,237,231,0.4) 60%, rgba(255,255,255,0.95) 100%);
+}
+.hero-logo {
+  position: absolute; top: 1.5rem; left: 50%;
+  transform: translateX(-50%);
+  width: 200px; z-index: 2;
+  filter: brightness(0.3);
+}
+.hero-content {
+  position: relative; z-index: 2;
+  text-align: left; padding-bottom: 2rem;
+}
+.hero-content h1 {
+  font-size: 1.75rem; letter-spacing: 0.15em;
+  text-transform: uppercase; margin-bottom: 1rem;
+  line-height: 1.2;
+}
+.hero-presented {
+  font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase;
+  margin-bottom: 0.25rem;
+}
+.hero-signature {
+  font-family: var(--font-serif); font-style: italic;
+  font-size: 1.5rem; margin-bottom: 0.25rem;
+}
+.hero-brokerage {
+  font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--slate);
+}
+
+/* ===== SECTION STYLES ===== */
+section { padding: 4rem 0; }
+.section-cream { background: var(--cream); }
+.section-white { background: var(--white); }
+.section-mist { background: var(--mist); }
+.section-charcoal { background: var(--charcoal); color: var(--white); }
+.section-header {
+  text-align: center; margin-bottom: 2.5rem;
+}
+.section-header h2 {
+  font-size: 2rem; letter-spacing: 0.08em;
+  text-transform: uppercase; line-height: 1.2;
+}
+.section-header .script {
+  font-family: var(--font-serif); font-style: italic;
+  font-size: 1.25rem; font-weight: 400;
+  display: block; margin-bottom: -0.25rem;
+  text-transform: none; letter-spacing: 0;
+}
+.section-header .sub {
+  font-family: var(--font-sans); font-size: 0.7rem;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--slate); margin-top: 0.5rem;
+  display: block;
+}
+.section-label {
+  font-size: 0.65rem; letter-spacing: 0.25em;
+  text-transform: uppercase; color: var(--slate);
+  margin-bottom: 0.5rem;
+}
+.section-divider {
+  width: 60px; height: 1px; background: var(--apricot);
+  margin: 2rem auto;
+}
+
+/* ===== WELCOME SECTION ===== */
+.welcome-grid {
+  display: grid; gap: 2rem;
+  align-items: center;
+}
+.welcome-photo {
+  border-radius: 4px; overflow: hidden;
+  max-width: 300px; margin: 0 auto;
+}
+.welcome-photo img { width: 100%; object-fit: cover; }
+.welcome-text h2 {
+  font-size: 1.75rem; letter-spacing: 0.05em;
+  text-transform: uppercase; margin-bottom: 1.5rem;
+}
+.welcome-text p {
+  margin-bottom: 1rem; font-size: 0.95rem;
+  line-height: 1.7; color: rgba(101,105,110,0.85);
+}
+.welcome-text .signature-img { width: 120px; margin-top: 1rem; }
+.welcome-brand {
+  display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+  margin-top: 2rem; padding-top: 2rem; border-top: 1px solid rgba(101,105,110,0.1);
+}
+.welcome-brand img { width: 140px; }
+.welcome-brand .brand-sub {
+  font-size: 0.6rem; letter-spacing: 0.25em; text-transform: uppercase;
+}
+
+/* ===== TEAM SECTION ===== */
+.team-grid {
+  display: grid; gap: 3rem;
+}
+.team-member { text-align: center; }
+.team-photo {
+  width: 220px; height: 280px; margin: 0 auto 1.5rem;
+  border-radius: 4px; overflow: hidden;
+}
+.team-photo img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
+.team-name {
+  font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase;
+  margin-bottom: 0.25rem;
+}
+.team-phone { font-size: 0.85rem; margin-bottom: 0.25rem; }
+.team-email {
+  font-size: 0.75rem; letter-spacing: 0.05em;
+  text-transform: uppercase; color: var(--slate);
+}
+.team-bios { margin-top: 2rem; }
+.team-bios p {
+  font-size: 0.9rem; line-height: 1.7; font-style: italic;
+  color: rgba(101,105,110,0.8); margin-bottom: 1rem;
+}
+.page-footer {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 3rem; padding-top: 1rem;
+  border-top: 1px solid rgba(101,105,110,0.1);
+  font-size: 0.6rem; letter-spacing: 0.15em;
+  text-transform: uppercase; color: var(--slate);
+}
+
+/* ===== FAVORITES GRID ===== */
+.fav-grid {
+  columns: 2;
+  column-gap: 1.5rem;
+}
+.fav-cat {
+  break-inside: avoid;
+  margin-bottom: 1.5rem;
+}
+.fav-cat h4 {
+  font-family: var(--font-sans); font-size: 0.65rem;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  padding-bottom: 0.5rem; margin-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(101,105,110,0.15);
+  color: var(--charcoal);
+}
+.fav-cat li {
+  font-size: 0.8rem; line-height: 1.8;
+  color: rgba(101,105,110,0.8);
+  padding-left: 0.75rem;
+  position: relative;
+}
+.fav-cat li::before {
+  content: '\2022'; position: absolute; left: 0;
+  color: var(--apricot);
+}
+.fav-cat li small {
+  font-size: 0.7rem; color: var(--slate); display: block;
+  margin-top: -0.25rem;
+}
+
+/* ===== OUR CITY ===== */
+.city-text { margin-bottom: 2rem; }
+.city-text p {
+  font-size: 0.9rem; line-height: 1.8;
+  color: rgba(101,105,110,0.85); margin-bottom: 1rem;
+}
+.city-photos {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+}
+.city-photos img { border-radius: 4px; width: 100%; aspect-ratio: 16/10; object-fit: cover; }
+
+/* ===== QUOTE BREAK ===== */
+.quote-break {
+  padding: 0;
+  display: grid; gap: 0;
+  min-height: 100vh; min-height: 100svh;
+}
+.quote-side {
+  background: var(--cream); padding: 3rem 1.5rem;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; text-align: center;
+}
+.quote-icon { width: 50px; margin-bottom: 1.5rem; opacity: 0.4; }
+.quote-side blockquote {
+  font-family: var(--font-serif); font-style: italic;
+  font-size: 1.75rem; line-height: 1.5;
+  color: var(--charcoal); margin-bottom: 1.5rem;
+  max-width: 360px;
+}
+.quote-side cite {
+  font-family: var(--font-sans); font-style: normal;
+  font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+}
+.quote-img { overflow: hidden; position: relative; }
+.quote-img img { width: 100%; height: 100%; object-fit: cover; min-height: 40vh; }
+.quote-break--inline {
+  width: 100%; margin-left: 0;
+  margin-top: 3rem; margin-bottom: 3rem;
+}
+
+/* ===== WHERE TO LIVE ===== */
+.housing-section { margin-bottom: 3rem; }
+.housing-section h3 {
+  font-family: var(--font-sans); font-size: 0.75rem;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+.housing-section p {
+  font-size: 0.9rem; line-height: 1.7;
+  color: rgba(101,105,110,0.85); margin-bottom: 1rem;
+}
+.housing-section .rec {
+  font-size: 0.85rem; line-height: 1.8;
+  padding-left: 0; color: rgba(101,105,110,0.8);
+}
+.housing-photo {
+  border-radius: 4px; overflow: hidden; margin-bottom: 1.5rem;
+  aspect-ratio: 16/9;
+}
+.housing-photo img { width: 100%; height: 100%; object-fit: cover; }
+
+/* ===== NEIGHBORHOODS ===== */
+.hood-map {
+  margin-bottom: 2rem; border-radius: 4px; position: relative;
+}
+.hood-map img { width: 100%; }
+.hood-map-container { width: 100%; height: 500px; border-radius: 4px; }
+.hood-map-container .mapboxgl-canvas-container,
+.hood-map-container .mapboxgl-canvas { border-radius: 4px; }
+#map-north-okc { height: 450px; }
+.hood-map-wrap { display: block; }
+
+/* ===== NEIGHBORHOOD DRAWER (Bottom Sheet) ===== */
+.hood-drawer-backdrop {
+  position: fixed; inset: 0; z-index: 997;
+  background: rgba(26, 26, 26, 0.25);
+  opacity: 0; visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+.hood-drawer-backdrop.open { opacity: 1; visibility: visible; }
+
+.hood-drawer {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 998;
+  background: var(--white);
+  border-top-left-radius: 16px; border-top-right-radius: 16px;
+  box-shadow: 0 -4px 30px rgba(0,0,0,0.12);
+  transform: translateY(100%);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  max-height: 60vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.hood-drawer.open { transform: translateY(0); }
+
+.hood-drawer-handle {
+  width: 36px; height: 4px;
+  background: var(--slate); border-radius: 2px;
+  margin: 0.75rem auto 0; opacity: 0.4;
+}
+.hood-drawer-close {
+  position: absolute; top: 0.75rem; right: 1rem;
+  background: none; border: none; cursor: pointer;
+  font-size: 1.4rem; color: var(--charcoal);
+  padding: 0.25rem 0.5rem; line-height: 1;
+  transition: color 0.2s;
+}
+.hood-drawer-close:hover { color: var(--apricot); }
+
+.hood-drawer-body {
+  padding: 1rem 1.5rem 1.75rem;
+  transition: opacity 0.15s ease;
+}
+.hood-drawer-body.swapping { opacity: 0; }
+
+.hood-drawer-body h4 {
+  font-family: var(--font-serif); font-weight: 400;
+  font-size: 1.2rem; margin-bottom: 0.2rem; color: var(--charcoal);
+}
+.hood-drawer-num { color: var(--apricot); margin-right: 0.15rem; }
+.hood-drawer-group {
+  font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--slate); margin-bottom: 0.65rem;
+}
+.hood-drawer-body p:last-child {
+  font-size: 0.88rem; line-height: 1.6; color: var(--charcoal);
+}
+.mapboxgl-ctrl-attrib { font-size: 0.6rem !important; opacity: 0.6; }
+
+@media (max-width: 768px) {
+  .hood-map-container { height: 380px; }
+  #map-north-okc { height: 340px; }
+}
+.hood-list {
+  display: grid; grid-template-columns: 1fr; gap: 0.25rem;
+  margin-bottom: 2rem;
+}
+.hood-list-item {
+  font-size: 0.8rem; font-weight: 500;
+  padding: 0.4rem 0.5rem; border-bottom: 1px solid rgba(101,105,110,0.08);
+  cursor: pointer; transition: color 0.2s, background 0.2s, border-color 0.2s;
+  border-radius: 3px;
+}
+.hood-list-item:hover {
+  color: var(--charcoal); background: rgba(207,174,155,0.08);
+}
+.hood-list-item.active {
+  color: var(--charcoal); background: rgba(207,174,155,0.15);
+  border-bottom-color: var(--apricot);
+}
+.hood-list-item span { color: var(--slate); margin-right: 0.5rem; }
+.hood-list-item.active span { color: var(--apricot); }
+.hood-group { margin-bottom: 3rem; }
+.hood-group-title {
+  text-align: center; margin-bottom: 2rem;
+}
+.hood-group-title h3 {
+  font-size: 1.5rem; letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.hood-group-title .script {
+  font-family: var(--font-serif); font-style: italic;
+  font-size: 1rem; display: block; text-transform: none;
+}
+.hood-group-title .sub {
+  font-size: 0.65rem; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--slate);
+}
+.hood-item { margin-bottom: 2rem; }
+.hood-item h4 {
+  font-family: var(--font-sans); font-size: 0.75rem;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  margin-bottom: 0.5rem; font-weight: 600;
+}
+.hood-item .hood-num {
+  color: var(--apricot); margin-right: 0.25rem;
+}
+.hood-item p {
+  font-size: 0.85rem; line-height: 1.7; font-style: italic;
+  color: rgba(101,105,110,0.8);
+}
+.hood-photos {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+.hood-photos img {
+  width: 100%; aspect-ratio: 16/10; object-fit: cover; border-radius: 4px;
+}
+.hood-photos.single { grid-template-columns: 1fr; }
+.hood-photos.single img { aspect-ratio: 16/9; }
+
+/* ===== DISTRICTS ===== */
+.district { margin-bottom: 3rem; padding-bottom: 3rem; border-bottom: 1px solid rgba(101,105,110,0.08); }
+.district:last-child { border-bottom: none; }
+.district-header { margin-bottom: 1.5rem; }
+.district-num {
+  font-family: var(--font-serif); font-style: italic;
+  font-size: 1.25rem; color: var(--apricot);
+  display: block; margin-bottom: 0.25rem;
+}
+.district-header h3 {
+  font-size: 1.75rem; letter-spacing: 0.05em;
+  text-transform: uppercase; line-height: 1.1;
+}
+.district-header .tagline {
+  font-family: var(--font-sans); font-size: 0.65rem;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--slate); margin-top: 0.25rem;
+}
+.district-img {
+  margin-bottom: 1.5rem; border-radius: 4px;
+  overflow: hidden; aspect-ratio: 16/9;
+}
+.district-img img { width: 100%; height: 100%; object-fit: cover; }
+.district-photos {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+.district-photos img {
+  width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: 4px;
+}
+.district-desc {
+  font-size: 0.9rem; line-height: 1.7; font-style: italic;
+  color: rgba(101,105,110,0.85); margin-bottom: 1.5rem;
+}
+.district-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem 1rem;
+}
+.district-grid .cat h4 {
+  font-family: var(--font-sans); font-size: 0.6rem;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--apricot); margin-bottom: 0.5rem;
+}
+.district-grid .cat li {
+  font-size: 0.8rem; line-height: 1.7;
+  color: rgba(101,105,110,0.8);
+}
+
+/* ===== EVENTS ===== */
+.event-list { max-width: 500px; margin: 0 auto; }
+.event-item {
+  display: flex; justify-content: space-between;
+  padding: 0.6rem 0; border-bottom: 1px solid rgba(101,105,110,0.1);
+  font-size: 0.85rem;
+}
+.event-item .month { color: var(--slate); font-size: 0.8rem; }
+
+/* ===== DOG FRIENDLY ===== */
+.dog-desc {
+  font-size: 0.9rem; line-height: 1.7; font-style: italic;
+  color: rgba(101,105,110,0.85); margin-bottom: 2rem;
+  max-width: 600px;
+}
+
+/* ===== CHECKLIST ===== */
+.checklist-progress {
+  text-align: center; margin-bottom: 2rem;
+  padding: 1rem; background: var(--cream); border-radius: 8px;
+}
+.checklist-progress .count {
+  font-family: var(--font-serif); font-size: 2rem;
+  color: var(--charcoal);
+}
+.checklist-progress .label {
+  font-size: 0.7rem; letter-spacing: 0.15em;
+  text-transform: uppercase; color: var(--slate);
+}
+.checklist-progress .bar {
+  width: 100%; height: 4px; background: var(--mist);
+  border-radius: 2px; margin-top: 0.75rem; overflow: hidden;
+}
+.checklist-progress .bar-fill {
+  height: 100%; background: var(--apricot);
+  border-radius: 2px; transition: width 0.3s;
+}
+.checklist-cat { margin-bottom: 2rem; }
+.checklist-cat h4 {
+  font-family: var(--font-sans); font-size: 0.65rem;
+  letter-spacing: 0.25em; text-transform: uppercase;
+  color: var(--apricot); margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(101,105,110,0.1);
+}
+.checklist-items {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+}
+.check-item {
+  display: flex; align-items: center; gap: 0.5rem;
+  padding: 0.4rem 0; font-size: 0.8rem;
+  color: rgba(101,105,110,0.8); cursor: pointer;
+}
+.check-item input[type="checkbox"] {
+  appearance: none; -webkit-appearance: none;
+  width: 16px; height: 16px; min-width: 16px;
+  border: 1.5px solid var(--slate); border-radius: 2px;
+  cursor: pointer; transition: all 0.2s;
+  position: relative;
+}
+.check-item input:checked {
+  background: var(--apricot); border-color: var(--apricot);
+}
+.check-item input:checked::after {
+  content: '\2713'; position: absolute;
+  top: 50%; left: 50%; transform: translate(-50%, -50%);
+  font-size: 10px; color: white; font-weight: 700;
+}
+.check-item.checked label { text-decoration: line-through; color: var(--slate); }
+.check-item label { cursor: pointer; line-height: 1.3; }
+.checklist-note {
+  font-size: 0.75rem; color: var(--slate); font-style: italic;
+  text-align: center; margin-top: 1rem;
+}
+
+/* ===== STAYING CONNECTED ===== */
+.connected-grid { display: grid; gap: 2rem; }
+.connected-text p {
+  font-size: 0.9rem; line-height: 1.7;
+  color: rgba(101,105,110,0.85); margin-bottom: 1rem;
+}
+.connected-social {
+  margin-top: 2rem;
+}
+.connected-social h4 {
+  font-family: var(--font-sans); font-size: 0.65rem;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+.connected-social p {
+  font-size: 0.85rem; margin-bottom: 0.5rem;
+}
+.connected-social a { color: var(--apricot); font-weight: 500; }
+.connected-photos {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;
+}
+.connected-photos img {
+  width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 4px;
+}
+
+/* ===== FOOTER ===== */
+.site-footer {
+  background: var(--slate); padding: 4rem 1.25rem;
+  text-align: center; color: var(--white);
+}
+.footer-logo { width: 200px; margin: 0 auto 1.5rem; }
+.footer-tagline {
+  font-family: var(--font-sans); font-size: 0.6rem;
+  letter-spacing: 0.25em; text-transform: uppercase;
+  margin-bottom: 2rem; opacity: 0.8;
+}
+.footer-contact {
+  font-size: 0.75rem; letter-spacing: 0.1em; line-height: 2;
+  opacity: 0.8;
+}
+.footer-brokerage {
+  margin-top: 2rem; padding-top: 1.5rem;
+  border-top: 1px solid rgba(255,255,255,0.2);
+  font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase;
+  opacity: 0.6;
+}
+
+/* ===== ANIMATIONS ===== */
+/* Base: all animated elements start hidden */
+[data-anim] {
+  opacity: 0;
+  will-change: transform, opacity;
+}
+[data-anim].visible { opacity: 1; }
+
+/* Fade up (default) */
+[data-anim="fade-up"] { transform: translateY(40px); }
+[data-anim="fade-up"].visible { transform: translateY(0); transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1); }
+
+/* Slide from left */
+[data-anim="slide-left"] { transform: translateX(-60px); }
+[data-anim="slide-left"].visible { transform: translateX(0); transition: opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1); }
+
+/* Slide from right */
+[data-anim="slide-right"] { transform: translateX(60px); }
+[data-anim="slide-right"].visible { transform: translateX(0); transition: opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1); }
+
+/* Scale up (zoom in from slightly smaller) */
+[data-anim="scale-up"] { transform: scale(0.92); }
+[data-anim="scale-up"].visible { transform: scale(1); transition: opacity 0.9s cubic-bezier(0.16,1,0.3,1), transform 0.9s cubic-bezier(0.16,1,0.3,1); }
+
+/* Scale reveal (image zooms from larger, clips into place) */
+[data-anim="scale-reveal"] { transform: scale(1.08); }
+[data-anim="scale-reveal"].visible { transform: scale(1); transition: opacity 1s cubic-bezier(0.16,1,0.3,1), transform 1.2s cubic-bezier(0.16,1,0.3,1); }
+
+/* Fade only (no movement) */
+[data-anim="fade"] { }
+[data-anim="fade"].visible { transition: opacity 0.8s ease; }
+
+/* Stagger delay for children with data-stagger */
+[data-stagger] > * { opacity: 0; transform: translateY(20px); }
+[data-stagger].visible > * {
+  opacity: 1; transform: translateY(0);
+  transition: opacity 0.5s cubic-bezier(0.16,1,0.3,1), transform 0.5s cubic-bezier(0.16,1,0.3,1);
+}
+
+/* Parallax images */
+.parallax-img {
+  overflow: hidden;
+}
+.parallax-img img {
+  will-change: transform;
+  transition: transform 0.1s linear;
+}
+
+/* Legacy support: keep .fade-in working */
+.fade-in {
+  opacity: 0; transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.fade-in.visible { opacity: 1; transform: translateY(0); }
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  [data-anim], [data-stagger] > *, .fade-in, .parallax-img img {
+    transition: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}
+
+/* ===== RESPONSIVE ===== */
+@media (min-width: 768px) {
+  .container { padding: 0 2rem; }
+  section { padding: 5rem 0; }
+  .section-header h2 { font-size: 2.5rem; }
+  .hero-content h1 { font-size: 2.5rem; }
+  .hero-logo { width: 220px; left: 2rem; transform: none; }
+  .welcome-grid { grid-template-columns: 1fr 1fr; gap: 3rem; }
+  .welcome-photo { max-width: none; }
+  .team-grid { grid-template-columns: 1fr 1fr; }
+  .fav-grid { columns: 3; }
+  .quote-break { grid-template-columns: 1fr 1fr; min-height: 100vh; min-height: 100svh; }
+  .hood-list { grid-template-columns: 1fr 1fr; }
+  .hood-drawer {
+    left: 50%; right: auto;
+    transform: translateX(-50%) translateY(100%);
+    width: 480px; max-height: 50vh;
+    border-radius: 16px 16px 0 0;
+  }
+  .hood-drawer.open { transform: translateX(-50%) translateY(0); }
+  .district-grid { grid-template-columns: repeat(3, 1fr); }
+  .connected-grid { grid-template-columns: 1fr 1fr; }
+  .checklist-items { grid-template-columns: 1fr 1fr 1fr; }
+}
+@media (min-width: 1024px) {
+  .section-header h2 { font-size: 3rem; }
+  .hero-content h1 { font-size: 3rem; }
+  .fav-grid { columns: 3; column-gap: 2rem; }
+  .district-grid { grid-template-columns: repeat(4, 1fr); }
+  .checklist-items { grid-template-columns: repeat(4, 1fr); }
+
+  /* Increase section breathing room */
+  section { padding: 6rem 0; }
+
+  /* Scale up body text slightly */
+  .welcome-text p,
+  .team-bios p,
+  .connected-text p,
+  .dog-desc,
+  .event-item { font-size: 0.95rem; }
+
+  /* Hero: larger logo, more padding */
+  .hero-logo { width: 260px; }
+  .hero-content { padding-bottom: 4rem; }
+  .hero-content h1 { font-size: 3.25rem; }
+
+  /* Quote breaks: scale typography */
+  .quote-side { padding: 4rem 3rem; }
+  .quote-side blockquote { font-size: 2rem; }
+
+  /* Widen constrained sections */
+  .event-list { max-width: 600px; }
+  .dog-desc { max-width: 700px; }
+
+  /* Neighborhood map + list side-by-side */
+  .hood-map-wrap {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    gap: 2rem;
+    align-items: start;
+  }
+  .hood-map-wrap .hood-list {
+    grid-template-columns: 1fr;
+    margin-bottom: 0;
+    max-height: 500px;
+    overflow-y: auto;
+  }
+}
+@media (min-width: 1440px) {
+  .container { max-width: 1200px; }
+  section { padding: 7rem 0; }
+
+  .section-header h2 { font-size: 3.25rem; }
+  .section-header .script { font-size: 1.4rem; }
+
+  .hero-logo { width: 280px; }
+  .hero-content h1 { font-size: 3.75rem; }
+  .hero-content { padding-bottom: 5rem; }
+
+  .welcome-text p,
+  .team-bios p,
+  .connected-text p,
+  .dog-desc { font-size: 1rem; }
+
+  .quote-side { padding: 5rem 4rem; }
+  .quote-side blockquote { font-size: 2.25rem; }
+
+  .team-photo { width: 260px; height: 330px; }
+
+  .event-list { max-width: 700px; }
+  .dog-desc { max-width: 800px; }
+}
+
+/* ===== PRINT ===== */
+@media print {
+  .toc-btn, .toc-overlay, .hood-drawer, .hood-drawer-backdrop { display: none; }
+  section { page-break-inside: avoid; padding: 2rem 0; }
+  .quote-break { min-height: auto; }
+}
+
+/* ===== ACCESS GATE ===== */
+#access-gate { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; min-height: 100svh; background: var(--cream); padding: 2rem 1.25rem; text-align: center; }
+#access-gate img { height: 28px; width: auto; margin-bottom: 3rem; }
+#access-gate h1 { font-family: var(--font-serif); font-size: clamp(1.8rem, 5vw, 3rem); color: var(--black); margin-bottom: 1rem; letter-spacing: 0.04em; }
+#access-gate p { font-family: var(--font-sans); font-size: 1rem; color: var(--charcoal); max-width: 380px; line-height: 1.7; margin-bottom: 2rem; }
+#access-gate a { display: inline-block; background: var(--apricot); color: var(--white); font-family: var(--font-sans); font-size: 0.8rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; padding: 0.9rem 2.5rem; border-radius: 50px; transition: all 0.3s ease; }
+#access-gate a:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.15); color: var(--white); }
+</style>
+</head>
+<body>
+
+<!-- ACCESS GATE -->
+<div id="access-gate">
+  <img src="../assets/Wordmark 1/Black/Web/Wordmark1_Black.png" alt="Van Horn Homes">
+  <h1>Your OKC Guide Awaits</h1>
+  <p>Register to receive your complimentary guide to Oklahoma City — neighborhoods, favorites, and everything you need for your move.</p>
+  <a href="https://vanhornhomes.fillout.com/okc-guide">Register for Access</a>
+</div>
+
+<div id="guide-content" style="display:none">
+
+<!-- FLOATING TOC BUTTON -->
+<button class="toc-btn" id="tocBtn" aria-label="Table of Contents">MENU</button>
+
+<!-- TOC OVERLAY -->
+<div class="toc-overlay" id="tocOverlay">
+  <button class="toc-close" id="tocClose" aria-label="Close menu">&times;</button>
+  <div class="toc-inner">
+    <div class="toc-title">Contents</div>
+    <div class="toc-list">
+      <a href="#hero" onclick="closeToc()">Welcome</a>
+      <a href="#team" onclick="closeToc()">Our Team</a>
+      <a href="#favorites" onclick="closeToc()">Our Favorite Things</a>
+      <a href="#our-city" onclick="closeToc()">Our City</a>
+      <a href="#where-to-live" onclick="closeToc()">Where to Live?</a>
+      <a href="#neighborhoods-urban" onclick="closeToc()">Neighborhoods | Urban Core</a>
+      <a href="#neighborhoods-north" onclick="closeToc()">Neighborhoods | Up North</a>
+      <a href="#districts" onclick="closeToc()">OKC Districts</a>
+      <a href="#events" onclick="closeToc()">Annual Events</a>
+      <a href="#dog-friendly" onclick="closeToc()">Dog Friendly</a>
+      <a href="#checklist" onclick="closeToc()">OKC Checklist</a>
+      <a href="#connected" onclick="closeToc()">Staying Connected</a>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== HERO / COVER ==================== -->
+<section class="hero" id="hero">
+  <div class="hero-bg">
+    <img src="../assets/Guide%20Photos/ChatGPT%20Image%20Feb%2019,%202026,%2012_39_07%20PM%20(1).png" alt="OKC Thunder 2025 Championship Parade">
+  </div>
+  <img class="hero-logo" src="../assets/Primary%20Logo/Slate/Web/PrimaryLogo_Slate.png" alt="Van Horn Homes">
+  <div class="hero-content">
+    <h1>The OKC<br>Welcome Guide</h1>
+    <p class="hero-presented">Presented by:</p>
+    <p class="hero-signature">Claire Van Horn</p>
+    <p class="hero-brokerage">Keller Williams Realty Elite</p>
+  </div>
+</section>
+
+<!-- ==================== WELCOME ==================== -->
+<section class="section-white" id="welcome">
+  <div class="container">
+    <div class="welcome-grid">
+      <div class="welcome-photo" data-anim="slide-left">
+        <img src="../assets/Guide%20Photos/IMG_6712%20(2).png" alt="Claire and Caleb Van Horn" loading="lazy">
+      </div>
+      <div class="welcome-text" data-anim="slide-right" data-delay="150">
+        <h2>Welcome, Friend</h2>
+        <p>We are Van Horn Homes, a husband &amp; wife real estate team with Keller Williams Realty Elite here in OKC.</p>
+        <p>We are excited that you will call our city home and hope this guide can put you on the fast track to learning &amp; loving Oklahoma City!</p>
+        <p>We have curated the top districts, restaurants, bars, coffee shops, and activities...at least in our opinion. Never hesitate to reach out if you need a recommendation or professional contact in the city.</p>
+        <p>From our hearts to yours &ndash; we look forward to serving you!</p>
+        <img class="signature-img" src="../assets/Signatures/Team/Slate/Web/TeamSignature_Slate.png" alt="The Van Horns" loading="lazy">
+        <div class="welcome-brand">
+          <img src="../assets/Secondary%20Logo/Slate/Web/SecondaryLogo_Slate.png" alt="Van Horn Homes" loading="lazy">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== OUR TEAM ==================== -->
+<section class="section-cream" id="team">
+  <div class="container">
+    <div class="section-header" data-anim="fade-up">
+      <h2>Our Team</h2>
+    </div>
+    <div class="team-grid" data-stagger>
+      <div class="team-member">
+        <div class="team-photo">
+          <img src="../assets/Guide%20Photos/IMG_9474.jpg" alt="Claire Van Horn" loading="lazy">
+        </div>
+        <p class="team-name">Claire Van Horn</p>
+        <p class="team-phone">405.664.3000</p>
+        <p class="team-email"><a href="mailto:claire@ccvanhorn.com">claire@ccvanhorn.com</a></p>
+      </div>
+      <div class="team-member">
+        <div class="team-photo">
+          <!-- Caleb's individual headshot - update src if a separate file is provided -->
+          <img src="../assets/Guide%20Photos/IMG_6712%20(2).png" alt="Caleb Van Horn" loading="lazy" style="object-position: right top;">
+        </div>
+        <p class="team-name">Caleb Van Horn</p>
+        <p class="team-phone">405.537.1453</p>
+        <p class="team-email"><a href="mailto:caleb@ccvanhorn.com">caleb@ccvanhorn.com</a></p>
+      </div>
+    </div>
+    <div class="team-bios" data-anim="fade-up" data-delay="200">
+      <p>Claire graduated from the University of Oklahoma with a major in Advertising and a minor in Enterprise studies. While working in the Advertising industry she learned valuable marketing skills that she uses to catch the eyes and ears of home buyers. She is people-oriented, design-minded, and your biggest cheerleader during the home buying/selling process. She also will go sing karaoke with you any night of the week!</p>
+      <p>Caleb graduated from the University of Oklahoma with a degree in Finance. He spent several years in Real Estate Finance and Asset Management. Having had his home inspection license, he is very well versed in what goes into having a safe and sturdy home. Caleb is detail-oriented, hyper-competitive, a fan of systems+operations, and an even bigger sports fan. BOOMER SOONER + THUNDER UP!</p>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== FAVORITE THINGS ==================== -->
+<section class="section-white" id="favorites">
+  <div class="container">
+    <div class="section-header" data-anim="fade-up">
+      <span class="script">a few of our</span>
+      <h2>Favorite Things</h2>
+    </div>
+    <div class="fav-grid" data-stagger>
+      <div class="fav-cat">
+        <h4>Restaurants</h4>
+        <ul>
+          <li>Taco Nation <small>Order it Cali style.</small></li>
+          <li>Pho Lien Hoa <small>Get the P11...you won't regret it</small></li>
+          <li>Jimmy B's <small>Great Sushi and Craft Cocktails</small></li>
+          <li>Patrona <small>Italian &ndash; Perfect for Date Night</small></li>
+          <li>Mexican Radio <small>Go for the Happy Hour Specials</small></li>
+          <li>Broadway 10 <small>Favorite Steakhouse</small></li>
+          <li>Akai Sushi <small>Holy Grail of OKC Sushi</small></li>
+          <li>Elisabettas <small>Italian on Western</small></li>
+          <li>Takaramono <small>ramen/sushi in the Plaza</small></li>
+          <li>NAZO <small>Japanese in Midtown</small></li>
+          <li>Carlettes <small>Italian w/ a view</small></li>
+          <li>MAHT <small>modern steakhouse on 23rd</small></li>
+          <li>Birdies <small>upscale Korean steakhouse</small></li>
+          <li>Raven <small>Western Ave</small></li>
+          <li>Lorena <small>Southern food in Midtown</small></li>
+          <li>Goose <small>Sandwiches in Midtown</small></li>
+          <li>Bar Sen <small>nationally acclaimed Lao noodles</small></li>
+          <li>Vast <small>at the top of Devon Tower</small></li>
+          <li>Truck Yard <small>fun outdoor eating w/ food trucks</small></li>
+          <li>Bob's Steakhouse <small>Come for the steak, stay for the carrot.</small></li>
+          <li>Big Truck Taco <small>OKC taco legend</small></li>
+        </ul>
+      </div>
+      <div class="fav-cat">
+        <h4>Brunch</h4>
+        <ul>
+          <li>Kitchen 324 <small>Downtown's Go-To Brunch Spot</small></li>
+          <li>Neighborhood JAM <small>Comfort Food Done Right</small></li>
+          <li>Cafe Kacao <small>Guatemalan Brunch You'll Crave</small></li>
+          <li>Red Rooster <small>Paseo Vibes &amp; Great Cocktails</small></li>
+          <li>Cafe Antigua <small>Cafe Kacao's Little Brother</small></li>
+          <li>Bradford house <small>cutest hotel</small></li>
+          <li>Sunnyside Diner <small>Old-School Diner Charm</small></li>
+          <li>Hunnybunny Biscuit <small>Southern Comfort in Every Bite</small></li>
+        </ul>
+      </div>
+      <div class="fav-cat">
+        <h4>Parks</h4>
+        <ul>
+          <li>Myriad Gardens <small>downtown's green oasis</small></li>
+          <li>Pearle Mesta Park <small>beautiful trees &amp; historic charm</small></li>
+          <li>Scissortail Park <small>OKC's newest gem</small></li>
+          <li>Horn Park <small>quiet neighborhood escape</small></li>
+          <li>Edgemere Park <small>shaded strolls &amp; playground</small></li>
+          <li>Lake Hefner <small>sunsets &amp; sailing</small></li>
+        </ul>
+      </div>
+      <div class="fav-cat">
+        <h4>Bars</h4>
+        <ul>
+          <li>Bar Arbolada <small>best cocktails in OKC</small></li>
+          <li>R&amp;J Lounge <small>pick a song on the jukebox</small></li>
+          <li>Palo Santo <small>mezcal &amp; cocktails</small></li>
+          <li>O Bar <small>rooftop cocktails in Midtown</small></li>
+          <li>Later Bye <small>cozy cocktails</small></li>
+          <li>The Daley <small>chill Paseo hangout</small></li>
+        </ul>
+      </div>
+      <div class="fav-cat">
+        <h4>Coffee Shops</h4>
+        <ul>
+          <li>The Harvey Bakery <small>catch me there on Tuesday mornings</small></li>
+          <li>EOTE <small>the booth IYKYK</small></li>
+          <li>Elemental <small>locally roasted goodness</small></li>
+          <li>Prelude <small>cozy &amp; creative</small></li>
+          <li>HQ <small>great for remote work</small></li>
+          <li>Junction <small>OKC coffee staple</small></li>
+          <li>Classen Coffee <small>dog-friendly patio</small></li>
+          <li>Park Grounds <small>coffee by Scissortail Park</small></li>
+        </ul>
+      </div>
+      <div class="fav-cat">
+        <h4>Other</h4>
+        <ul>
+          <li>Chicken N Pickle <small>Pickleball</small></li>
+          <li>Boom Town <small>Ice Cream</small></li>
+          <li>The Parlor <small>Food Hall</small></li>
+          <li>Braum's <small>Burgers &amp; Ice Cream</small></li>
+          <li>Pie Junkie <small>Sweet Treats</small></li>
+        </ul>
+      </div>
+      <div class="fav-cat">
+        <h4>Shopping</h4>
+        <ul>
+          <li>Opolis <small>great Thunder and college gear</small></li>
+          <li>ShopGood <small>Automobile Alley</small></li>
+          <li>Swaddle <small>for baby/kids</small></li>
+          <li>Gretta Sloan <small>Nichols Hills</small></li>
+          <li>Blue Seven <small>local apparel &amp; gifts</small></li>
+          <li>Made <small>midtown</small></li>
+          <li>Out on a Limb <small>unique gifts in the Plaza</small></li>
+          <li>Chirps and Cheers <small>Stationery</small></li>
+          <li>Milo &amp; Lilly Boutique <small>trendy women's boutique</small></li>
+          <li>Bebes <small>gifts &amp; registry, Nichols Hills</small></li>
+          <li>CK &amp; co <small>womens clothes</small></li>
+          <li>Betsy King Shoes <small>curated shoe boutique</small></li>
+          <li>Su Casa <small>Needlepoint store in the Paseo</small></li>
+          <li>Abide Interiors <small>Edmond</small></li>
+          <li>The Gift Shop <small>Edmond</small></li>
+          <li>Edit &amp; co <small>Edmond</small></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== OUR CITY ==================== -->
+<section class="section-cream" id="our-city">
+  <div class="container">
+    <div class="section-header" data-anim="fade-up">
+      <h2>The Memorial<br>&amp; The Thunder</h2>
+    </div>
+    <div class="city-text" data-anim="fade-up">
+      <p>To truly understand this city we call home, we recommend spending some time at the Oklahoma City Memorial &amp; Museum. What took place on April 19, 1995, in downtown OKC changed our city and our nation forever. But it is how our city responded that took the world by surprise. The "Oklahoma Standard" was born out of the overwhelming community response in the hours, days, and months following the tragedy. It lives on today in many of us as we dedicate our lives to those that were lost through acts of service, honor, and kindness. Whether touring the museum or taking in the glow and serenity of the Field of Empty chairs at night, the OKC Memorial is a must-see for any OKCitian.</p>
+      <p>There is no better example of the renaissance Oklahoma City experienced following the bombing than our beloved OKC Thunder! So many greats have come through our city in the decade they've called OKC home, and the best is still to come. We recommend taking in a game and seeing what Loud City is all about! Pro-tip: There is nothing quite like the NBA playoffs in OKC (we may just have to wait a few years to experience it.)</p>
+    </div>
+    <div class="city-photos" data-anim="scale-up">
+      <img src="../assets/Guide%20Photos/b6d89a3a-4a6a-4394-a258-2b33d7f776c6-large16x9_Survivor20Tree.jpg" alt="OKC Memorial Survivor Tree" loading="lazy">
+      <img src="../assets/Guide%20Photos/Oklahoma-City-Thunder-Free-Pick-NBA-Betting-Prediction.jpg" alt="OKC Thunder fans" loading="lazy">
+    </div>
+  </div>
+</section>
+
+<!-- ==================== QUOTE: WILL ROGERS ==================== -->
+<section class="quote-break">
+  <div class="quote-side">
+    <img class="quote-icon" src="../assets/Brand%20Mark%201/Slate/Web/BrandMark1_Slate.png" alt="" loading="lazy">
+    <blockquote>If you don't like the weather in Oklahoma, wait a minute and it'll change.</blockquote>
+    <cite>Will Rogers</cite>
+  </div>
+  <div class="quote-img">
+    <img src="../assets/Guide%20Photos/istockphoto-1275841574-612x612.jpg" alt="Oklahoma City skyline" loading="lazy">
+  </div>
+</section>
+
+<!-- ==================== WHERE TO LIVE ==================== -->
+<section class="section-white" id="where-to-live">
+  <div class="container">
+    <div class="section-header" data-anim="fade-up">
+      <h2>Where to Live?</h2>
+    </div>
+    <div class="housing-section" data-anim="fade-up">
+      <h3>Are you looking for a home?</h3>
+      <div class="housing-photo">
+        <img src="../assets/Guide%20Photos/Screen-Shot-2021-02-14-at-8.28.05-PM.webp" alt="OKC bungalow home" loading="lazy">
+      </div>
+      <p>Oklahoma City is still one of the most affordable places to buy a home. Easy to navigate and with little traffic, you can't go wrong choosing which part of town is right for you. Some of the most popular neighborhoods in the Urban Core:</p>
+      <div class="rec">
+        <p><strong>Lincoln Terrace</strong> &ndash; Close proximity to OU Medicine</p>
+        <p><strong>Mesta Park</strong> &ndash; Centrally located with lots of charm</p>
+        <p><strong>The Paseo</strong> &ndash; Bungalows galore with easy access to shops and food</p>
+        <p><strong>Shepherd District</strong> &ndash; Classic architecture and affordable prices</p>
+      </div>
+    </div>
+    <div class="housing-section" data-anim="fade-up">
+      <h3>Are you thinking apartment life?</h3>
+      <p>Oklahoma City has seen an explosion of new apartment complexes and townhomes. Finding the perfect blend of affordability and lifestyle has never been easier downtown. Some of our top recommendations:</p>
+      <div class="rec">
+        <p style="font-size:var(--fs-sm);color:var(--charcoal);text-transform:uppercase;letter-spacing:.08em;margin-top:1rem"><strong>SOSA &amp; Midtown</strong></p>
+        <p><strong>The Bower</strong> &ndash; Boutique luxury in the heart of SOSA with neighborhood charm</p>
+        <p><strong>The Edge at Midtown</strong> &ndash; Rooftop pool, dog park, and skyline views on Walker Ave</p>
+        <p><strong>LIFT</strong> &ndash; Mixed-use living on 10th St with ground-floor shops and dining</p>
+        <p style="font-size:var(--fs-sm);color:var(--charcoal);text-transform:uppercase;letter-spacing:.08em;margin-top:1rem"><strong>Deep Deuce &amp; Bricktown</strong></p>
+        <p><strong>Level Urban Apartments</strong> &ndash; The anchor of the Deep Deuce revival</p>
+        <p><strong>The First Residences</strong> &ndash; Luxury living in a restored 1931 Art Deco skyscraper</p>
+        <p><strong>Steelyard at Bricktown</strong> &ndash; Modern finishes with a resort-style pool</p>
+        <p style="font-size:var(--fs-sm);color:var(--charcoal);text-transform:uppercase;letter-spacing:.08em;margin-top:1rem"><strong>Film Row</strong></p>
+        <p><strong>West Village</strong> &ndash; The district&rsquo;s mixed-use anchor with rooftop pool and retail below</p>
+        <p><strong>Mosaic</strong> &ndash; Contemporary living steps from Jones Assembly and Bar Arbolada</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== NEIGHBORHOODS: URBAN CORE ==================== -->
+<section class="section-cream" id="neighborhoods-urban">
+  <div class="container">
+    <div class="section-header" data-anim="fade-up">
+      <span class="script">Historic Oklahoma City</span>
+      <h2>Neighborhoods</h2>
+    </div>
+    <div class="hood-map-wrap">
+      <div class="hood-map" data-anim="scale-up">
+        <div id="map-urban-core" class="hood-map-container"></div>
+      </div>
+      <div class="hood-list" data-stagger data-map="map-urban-core">
+        <div class="hood-list-item" data-hood="1"><span>1.</span> Heritage Hills</div>
+        <div class="hood-list-item" data-hood="2"><span>2.</span> Mesta Park</div>
+        <div class="hood-list-item" data-hood="3"><span>3.</span> Jefferson Park</div>
+        <div class="hood-list-item" data-hood="4"><span>4.</span> Edgemere Park</div>
+        <div class="hood-list-item" data-hood="5"><span>5.</span> Crown Heights</div>
+        <div class="hood-list-item" data-hood="6"><span>6.</span> Putnam Heights</div>
+        <div class="hood-list-item" data-hood="7"><span>7.</span> SOSA</div>
+        <div class="hood-list-item" data-hood="8"><span>8.</span> Midtown</div>
+        <div class="hood-list-item" data-hood="9"><span>9.</span> Deep Deuce</div>
+        <div class="hood-list-item" data-hood="10"><span>10.</span> Bricktown</div>
+        <div class="hood-list-item" data-hood="11"><span>11.</span> Film Row</div>
+        <div class="hood-list-item" data-hood="12"><span>12.</span> Lincoln Terrace</div>
+        <div class="hood-list-item" data-hood="13"><span>13.</span> The Paseo</div>
+        <div class="hood-list-item" data-hood="14"><span>14.</span> The Plaza | Classen-Ten-Penn</div>
+        <div class="hood-list-item" data-hood="15"><span>15.</span> Wheeler District</div>
+        <div class="hood-list-item" data-hood="16"><span>16.</span> Gatewood</div>
+        <div class="hood-list-item" data-hood="17"><span>17.</span> Crestwood</div>
+        <div class="hood-list-item" data-hood="18"><span>18.</span> Linwood</div>
+        <div class="hood-list-item" data-hood="19"><span>19.</span> Cleveland</div>
+        <div class="hood-list-item" data-hood="20"><span>20.</span> Shepherd</div>
+        <div class="hood-list-item" data-hood="21"><span>21.</span> Venice</div>
+      </div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- THE HISTORIC HEART -->
+    <div class="hood-group" data-anim="slide-left">
+      <div class="hood-group-title">
+        <h3>The Historic <span class="script">Heart of OKC</span></h3>
+      </div>
+      <div class="hood-photos single">
+        <img src="../assets/Guide%20Photos/overholser-mansion_3500mh.jpg" alt="Heritage Hills mansion" loading="lazy">
+      </div>
+      <div class="hood-item">
+        <h4><span class="hood-num">1.</span> Heritage Hills</h4>
+        <p>Architecturally significant and beaming with history, Heritage Hills has maintained a strong sense of community as the neighborhood continues to evolve. The homes are some of our favorite places within city limits.</p>
+      </div>
+      <div class="hood-item">
+        <h4><span class="hood-num">2.</span> Mesta Park</h4>
+        <p>Mesta Park provides a charming historic community with all the modern amenities. A community that puts its residents first while preserving the past and improving the future is what makes Mesta Park so desirable.</p>
+      </div>
+      <div class="hood-item">
+        <h4><span class="hood-num">3.</span> Jefferson Park</h4>
+        <p>A quiet, entirely residential neighborhood with no through traffic — a rare urban retreat with tree-lined streets and a strong sense of community.</p>
+      </div>
+      <div class="hood-item">
+        <h4><span class="hood-num">4.</span> Edgemere Park</h4>
+        <p>Winding streets and lush tree canopy create a park-like setting in the heart of the Urban Core — one of OKC's most unique residential enclaves.</p>
+      </div>
+      <div class="hood-item">
+        <h4><span class="hood-num">5.</span> Crown Heights</h4>
+        <p>Crown Heights is a great place to call home. With its charming architecture and close proximity to Western Ave, it offers something for everyone.</p>
+      </div>
+      <div class="hood-item">
+        <h4><span class="hood-num">6.</span> Putnam Heights</h4>
+        <p>The historic charm and oversized lots of this neighborhood are matched only by its proximity to some amazing amenities in Oklahoma City. With easy access to all the city has to offer, you'll never have trouble getting around town when living at Putnam Heights.</p>
+      </div>
+    </div>
+
+    <!-- MIDTOWN & DOWNTOWN -->
+    <div class="hood-group" data-anim="slide-right">
+      <div class="hood-group-title">
+        <h3>Midtown <span class="script">&amp;</span> Downtown</h3>
+      </div>
+      <div class="hood-item">
+        <h4><span class="hood-num">7.</span> SOSA (South of St. Anthony&rsquo;s)</h4>
+        <p>Quickly becoming one of the most desirable addresses in Midtown, SOSA is where modern architecture meets neighborhood charm. The streets here are lined with some of Oklahoma City&rsquo;s most striking new homes &mdash; a perfect blend of urban energy and residential calm.</p>
+      </div>
+      <div class="hood-item">
+        <h4><span class="hood-num">8.</span> Midtown</h4>
+        <p>The beating heart of OKC&rsquo;s social scene. Whether it&rsquo;s dinner at a buzzworthy new restaurant, drinks on a rooftop, or a Saturday morning stroll through the shops, Midtown keeps you in the middle of it all &mdash; and there&rsquo;s no shortage of places to call home within walking distance.</p>
+      </div>
+      <div class="hood-item">
+        <h4><span class="hood-num">9.</span> Deep Deuce</h4>
+        <p>Once the epicenter of Oklahoma City&rsquo;s jazz and blues scene, Deep Deuce has reinvented itself as one of downtown&rsquo;s most vibrant residential communities. Great restaurants, lively nightlife, and an unbeatable location steps from everything downtown has to offer. Just up the hill, The Hill at Bricktown offers townhomes for those looking to own a piece of the neighborhood.</p>
+      </div>
+      <div class="hood-item">
+        <h4><span class="hood-num">10.</span> Bricktown</h4>
+        <p>OKC&rsquo;s premier entertainment district &mdash; more than 45 restaurants, bars, and shops line the historic brick streets and canal. From comedy shows and baseball games to concerts and outdoor dining along the water, Bricktown brings an energy unlike anywhere else in the city.</p>
+      </div>
+      <div class="hood-item">
+        <h4><span class="hood-num">11.</span> Film Row</h4>
+        <p>The creative soul of downtown. Tucked along West Main Street, Film Row is home to some of OKC&rsquo;s best cocktail bars, acclaimed restaurants, and local breweries. More intimate and artsy than its neighbors, it&rsquo;s the kind of place where you&rsquo;ll discover your new favorite spot.</p>
+      </div>
+    </div>
+
+    <!-- THE UP & COMING -->
+    <div class="hood-group" data-anim="slide-left">
+      <div class="hood-group-title">
+        <span class="script">The</span>
+        <h3>Up &amp; Coming</h3>
+      </div>
+      <div class="hood-item">
+        <h4><span class="hood-num">12.</span> Lincoln Terrace</h4>
+        <p>Lincoln Terrace is a historic preservation district in nearby many downtown OKC attractions. It offers great views of the skyline and Oklahoma State Capital, with its picturesque brick architecture.</p>
+      </div>
+      <div class="hood-item">
+        <h4><span class="hood-num">13.</span> The Paseo</h4>
+        <p>Oklahoma City's original art district has never been more popular. With plenty of activities for everyone, from local art galleries to festivals with great food or live music a short walk away.</p>
+      </div>
+      <div class="hood-item">
+        <h4><span class="hood-num">14.</span> The Plaza | Classen-Ten-Penn</h4>
+        <p>Classen Ten Penn is a vibrant neighborhood that has undergone many changes in recent years. With easy access to the heart of downtown OKC and the Plaza District across the street from you, this area provides its residents lots of excitement.</p>
+      </div>
+      <div class="hood-item">
+        <h4><span class="hood-num">15.</span> Wheeler District</h4>
+        <p>Wheeler features everything from spectacular views of the downtown skyline (including its iconic Ferris wheel), to bike trails along the Oklahoma River and restaurants and shopping steps from your door. Plus the new West Gate Elementary is connected to the neighborhood.</p>
+      </div>
+    </div>
+
+    <!-- THE WOODS -->
+    <div class="hood-group" data-anim="slide-right">
+      <div class="hood-group-title">
+        <h3>The Woods</h3>
+        <span class="sub">Gatewood &bull; Crestwood &bull; Linwood</span>
+      </div>
+      <div class="hood-item">
+        <h4><span class="hood-num">16.</span> Gatewood</h4>
+        <p>Gatewood blends historic charm and modern new builds. Home to an eclectic mix of people who love the convenience of the Plaza and all 23rd St. has to offer. You will be hard-pressed to find a more convenient location in the Urban Core.</p>
+      </div>
+      <div class="hood-item">
+        <h4><span class="hood-num">17.</span> Crestwood</h4>
+        <p>Crestwood is a picturesque neighborhood in the heart of Oklahoma City, with quick access to all that downtown has to offer. Enjoy a home full of character and charm.</p>
+      </div>
+      <div class="hood-item">
+        <h4><span class="hood-num">18.</span> Linwood</h4>
+        <p>Linwood Place boasts a thriving community plus many historic homes. The styles range from colonial revival, to craftsman, through tudor revival, all of which are being thoughtfully renovated and restored.</p>
+      </div>
+    </div>
+
+    <!-- THE WEST EDGE -->
+    <div class="hood-group" data-anim="slide-left">
+      <div class="hood-group-title">
+        <h3>The West Edge</h3>
+        <span class="sub">of the Urban Core</span>
+      </div>
+      <div class="hood-photos single">
+        <img src="../assets/Guide%20Photos/Cleveland-Sign.jpg" alt="Cleveland neighborhood sign" loading="lazy">
+      </div>
+      <div class="hood-item">
+        <h4><span class="hood-num">19.</span> Cleveland</h4>
+        <p>Cleveland is a friendly, diverse neighborhood in the heart of OKC's urban core. This area offers homes with many different styles and great schools for kids!</p>
+      </div>
+      <div class="hood-item">
+        <h4><span class="hood-num">20.</span> Shepherd</h4>
+        <p>Shepherd is a small neighborhood with an old-world charm. The streets are lined by manicured lawns and many tudor style homes that have been remodeled.</p>
+      </div>
+      <div class="hood-item">
+        <h4><span class="hood-num">21.</span> Venice</h4>
+        <p>Venice is the perfect place to call home if you're looking for a friendly community, great location, and unique blend of home styles on the winding boulevard.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== NEIGHBORHOODS: NORTH OKC ==================== -->
+<section class="section-white" id="neighborhoods-north">
+  <div class="container">
+    <div class="section-header" data-anim="fade-up">
+      <h2>North OKC</h2>
+    </div>
+    <div class="hood-map-wrap">
+      <div class="hood-map" data-anim="scale-up">
+        <div id="map-north-okc" class="hood-map-container"></div>
+      </div>
+      <div class="hood-list" data-stagger data-map="map-north-okc">
+        <div class="hood-list-item" data-hood="22"><span>22.</span> Zachary Taylor</div>
+        <div class="hood-list-item" data-hood="23"><span>23.</span> Belle Isle</div>
+        <div class="hood-list-item" data-hood="24"><span>24.</span> Glenbrook</div>
+        <div class="hood-list-item" data-hood="25"><span>25.</span> Nichols Hills</div>
+        <div class="hood-list-item" data-hood="26"><span>26.</span> The Village</div>
+        <div class="hood-list-item" data-hood="27"><span>27.</span> Quail Creek</div>
+      </div>
+    </div>
+    <div class="hood-group" data-anim="slide-right">
+      <div class="hood-item">
+        <h4><span class="hood-num">22.</span> Zachary Taylor</h4>
+        <p>Are you looking for an easy commute and plenty of entertainment options in the Urban Core? This neighborhood borders Western Avenue, so its residents have access not only to major highways but also to many popular dining destinations as well.</p>
+      </div>
+      <div class="hood-item">
+        <h4><span class="hood-num">23.</span> Belle Isle</h4>
+        <p>Whether you're looking for a quick meal or some retail therapy, the residents of Belle Isle have easy access to all that OKC has to offer. Plus, seamless commuting options from this central location in the North Urban Core!</p>
+      </div>
+      <div class="hood-item">
+        <h4><span class="hood-num">24.</span> Glenbrook</h4>
+        <p>A friendly community with tree-lined streets and quick access to restaurants, coffee shops, and parks. Glenbrook offers a welcoming neighborhood feel in the heart of North OKC.</p>
+      </div>
+      <div class="hood-photos single" data-anim="scale-up">
+        <img src="../assets/Guide%20Photos/5a47f873d52f252b7e788d02137ddb18-cc_ft_1536.jpg" alt="Nichols Hills estate" loading="lazy">
+      </div>
+      <div class="hood-item">
+        <h4><span class="hood-num">25.</span> Nichols Hills</h4>
+        <p>Nichols Hills is a luxury neighborhood located North of the Urban Core and Western Ave District. Its upscale environment and beautiful homes plus the manicured streets and parks have made it one of the most sought-after places in Oklahoma City.</p>
+      </div>
+      <div class="hood-item">
+        <h4><span class="hood-num">26.</span> The Village</h4>
+        <p>The Village is a great place to live if you're looking for the perfect mix of city life and affordability. With its many restaurants, coffee shops, and parks it's quickly become a sought-after area in the Northern part of the city.</p>
+      </div>
+      <div class="hood-item">
+        <h4><span class="hood-num">27.</span> Quail Creek</h4>
+        <p>One of the most desired neighborhoods of NW OKC, Quail Creek has become a wonderfully established neighborhood with homes ranging from Mid-Century Modern, Traditional, Cottage, Contemporary and everything in between. The HOA organizes numerous social events throughout the year like 4th of July Parade and neighborhood Trick-or-Treating.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== QUOTE: ROGERS & HAMMERSTEIN ==================== -->
+<section class="quote-break">
+  <div class="quote-img">
+    <img src="../assets/Guide%20Photos/istockphoto-1257976639-612x612.jpg" alt="Oklahoma landscape" loading="lazy">
+  </div>
+  <div class="quote-side">
+    <img class="quote-icon" src="../assets/Brand%20Mark%201/Slate/Web/BrandMark1_Slate.png" alt="" loading="lazy">
+    <blockquote>Oklahoma, where the wind comes sweepin' down the plain</blockquote>
+    <cite>Rogers &amp; Hammerstein</cite>
+  </div>
+</section>
+
+<!-- ==================== OKC DISTRICTS ==================== -->
+<section class="section-cream" id="districts">
+  <div class="container">
+    <div class="section-header" data-anim="fade-up">
+      <h2>OKC Districts</h2>
+      <span class="sub">The Urban Core</span>
+    </div>
+
+    <div class="section-label" style="text-align:center;margin-bottom:2rem;">Rankings in no particular order</div>
+
+    <!-- #1 WESTERN AVE -->
+    <div class="district" data-anim="slide-left" id="western-ave">
+      <div class="district-header">
+        <span class="district-num">#1</span>
+        <h3>Western Ave</h3>
+      </div>
+      <div class="district-img">
+        <img src="../assets/Guide%20Photos/New-Stores-Classen-Curve-Oklahoma-City-2017-The-Double-Take-Girls-Style-Blog-41.jpg" alt="Classen Curve shopping" loading="lazy">
+      </div>
+      <p class="district-desc">Some of OKC's most fashionable shops and best restaurants are in the Classen Curve shopping area along Western Avenue between Northwest Grand Boulevard and Classen Boulevard.</p>
+      <h4 style="font-family:var(--font-sans);font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;margin:1rem 0 0.75rem;">Classen Curve</h4>
+      <div class="district-grid">
+        <div class="cat"><h4>Shopping</h4><ul><li>lululemon</li><li>Tecovas</li><li>Anthropologie</li><li>West Elm</li></ul></div>
+        <div class="cat"><h4>Dining</h4><ul><li>Flower Child</li><li>Torchy's</li><li>Osteria</li><li>Saturn Grill</li></ul></div>
+        <div class="cat"><h4>Other</h4><ul><li>Trader Joe's</li><li>Wholefoods</li><li>Republic Pub</li><li>The Hutch</li></ul></div>
+      </div>
+      <h4 style="font-family:var(--font-sans);font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;margin:1.5rem 0 0.75rem;">Original Western Ave</h4>
+      <p class="district-desc">If curated treasure hunting is more your style, visit one of Western Ave's many antique stores, like Antique Avenue or Guestroom Records, which sells new and old vinyl albums.</p>
+      <div class="district-grid">
+        <div class="cat"><h4>Shopping</h4><ul><li>Antique Avenue</li><li>ReModern OK</li><li>Guestroom Records</li><li>K&amp;N Consignment</li></ul></div>
+        <div class="cat"><h4>Dining</h4><ul><li>Sushi Neko</li><li>VZD's</li><li>Wedge Pizzeria</li><li>Musashi's</li></ul></div>
+        <div class="cat"><h4>Other</h4><ul><li>Stella Nova Coffee</li><li>Freeman Liquor</li><li>Local Lather Soap</li><li>Weldon Jack Barber</li></ul></div>
+      </div>
+    </div>
+
+    <!-- #2 UPTOWN 23RD -->
+    <div class="district" data-anim="slide-right" id="uptown-23rd">
+      <div class="district-header">
+        <span class="district-num">Number Two</span>
+        <h3>Uptown 23rd</h3>
+      </div>
+      <div class="district-img">
+        <img src="../assets/Guide%20Photos/Jan._Sunset_Reception_-_Tower_Theatre.jpg" alt="Tower Theatre" loading="lazy">
+      </div>
+      <p class="district-desc">23rd Street is the perfect blend of American dive bars and great food. From date night to brunch, a quick bite, or a night out, 23rd Street has something for every occasion! We love visiting Pony Boy for a drink followed by Tower Theatre for a show!</p>
+      <div class="district-grid">
+        <div class="cat"><h4>Bars</h4><ul><li>The Pump</li><li>The Eleanor</li><li>Bunker Club</li><li>Ponyboy</li></ul></div>
+        <div class="cat"><h4>Dining</h4><ul><li>Big Truck Tacos</li><li>Cheever's Cafe</li><li>MAHT</li><li>HunnyBunny Biscuit</li></ul></div>
+        <div class="cat"><h4>Dining</h4><ul><li>SER</li><li>Cajun Corner</li><li>Pizzeria Gusto</li><li>Byron's Liquor</li></ul></div>
+      </div>
+    </div>
+
+    <!-- #3 STOCKYARD CITY -->
+    <div class="district" data-anim="slide-left" id="stockyard-city">
+      <div class="district-header">
+        <span class="district-num">#3</span>
+        <h3>Stockyard City</h3>
+        <p class="tagline">Spirit of the Old West</p>
+      </div>
+      <div class="district-photos">
+        <img src="../assets/Guide%20Photos/Stockyad_City_Langston_s_1_c86fb12a-9adc-4b36-8fd0-e00715e8c0bb.jpg" alt="Langston's western wear" loading="lazy">
+        <img src="../assets/Guide%20Photos/Stockyards-5.jpg" alt="Stockyards" loading="lazy">
+      </div>
+      <p class="district-desc">We'll keep this one brief, but the stockyards are a glimpse into OKC's history. Horses, cowboys, and of course cattle. If you are in the market for authentic western wear, look no further. Plus Cattleman's Steakhouse has been an Oklahoma City icon since it opened in 1910.</p>
+      <div class="district-grid">
+        <div class="cat"><h4>Dining</h4><ul><li>Cattleman's Steakhouse</li><li>McClintock Saloon</li></ul></div>
+        <div class="cat"><h4>Shopping</h4><ul><li>Langston's</li><li>Shorty's Hattery</li></ul></div>
+      </div>
+    </div>
+
+    <!-- #4 PLAZA DISTRICT -->
+    <div class="district" data-anim="slide-right" id="plaza-district">
+      <div class="district-header">
+        <span class="district-num">number four</span>
+        <h3>The Plaza District</h3>
+        <p class="tagline">Funky Little Arts District</p>
+      </div>
+      <div class="district-img">
+        <img src="../assets/Guide%20Photos/PLAZA%20DISTRICT.jpg" alt="Plaza District" loading="lazy">
+      </div>
+      <p class="district-desc">One of the most popular districts in OKC, the plaza has an eclectic blend of shopping and restaurants. Hosting art shows and festivals, there is always something happening. Check out the ever-changing Plaza Walls and some Roxy's Ice Cream! Make sure to stop by Mexican Radio for Happy Hour!</p>
+      <div class="district-grid">
+        <div class="cat"><h4>Shopping</h4><ul><li>Bad Granny's</li><li>Dig It</li><li>Out On A Limb</li><li>Grinmore</li></ul></div>
+        <div class="cat"><h4>Dining</h4><ul><li>The Mule</li><li>Empire Pizza</li><li>Takaramono</li><li>New State Burger</li><li>Braum's</li></ul></div>
+        <div class="cat"><h4>Dining</h4><ul><li>The Press</li><li>Aurora</li><li>Pie Junkie</li><li>Mo Der Lao</li><li>Bar Sen</li></ul></div>
+        <div class="cat"><h4>Bars</h4><ul><li>Good for a few</li><li>Up-Down</li><li>Saint's</li><li>Neon Coffee</li></ul></div>
+      </div>
+    </div>
+
+    <!-- #5 THE PASEO -->
+    <div class="district" data-anim="slide-left" id="paseo">
+      <div class="district-header">
+        <span class="district-num">#5</span>
+        <h3>The Paseo</h3>
+        <p class="tagline">Arts District</p>
+      </div>
+      <div class="district-img">
+        <img src="../assets/Guide%20Photos/Paseo_flower.png" alt="The Paseo Arts District" loading="lazy">
+      </div>
+      <p class="district-desc">The Paseo is home to over 20 galleries and more than 80 vibrant artists all within walking distance of each other on the curved, two-block street that has maintained its Spanish revival architecture with its original stucco buildings and clay roof tiles. Intermixed with the galleries are restaurants, art schools, boutiques, and other businesses. Goro Ramen is a must!</p>
+      <div class="district-grid">
+        <div class="cat"><h4>Bars</h4><ul><li>The Daley</li><li>Red Rooster</li><li>Paseo Daiquiri</li><li>Scratch</li></ul></div>
+        <div class="cat"><h4>Dining</h4><ul><li>Paseo Grill</li><li>Goro Ramen</li><li>Frida Southwest</li><li>Picasso Cafe</li></ul></div>
+        <div class="cat"><h4>Galleries</h4><ul><li>Gallery One</li><li>Contemporary Art</li><li>JRB Art</li><li>Brayer &amp; Brush</li></ul></div>
+      </div>
+    </div>
+
+    <!-- QUOTE: STATE MOTTO -->
+    <div class="quote-break quote-break--inline" data-anim="fade">
+      <div class="quote-side">
+        <img class="quote-icon" src="../assets/Brand%20Mark%201/Slate/Web/BrandMark1_Slate.png" alt="" loading="lazy">
+        <blockquote>Labor Omnia Vincit</blockquote>
+        <p style="font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--slate);margin-bottom:1rem;">Labor Conquers All</p>
+        <cite>Oklahoma State Motto</cite>
+      </div>
+      <div class="quote-img">
+        <img src="../assets/Guide%20Photos/CapitolfrontFLOWoriginal_preview-1.jpg" alt="Oklahoma State Capitol" loading="lazy">
+      </div>
+    </div>
+
+    <!-- #6 MIDTOWN -->
+    <div class="district" data-anim="slide-right" id="midtown">
+      <div class="district-header">
+        <span class="district-num">#6</span>
+        <h3>Midtown</h3>
+      </div>
+      <div class="district-img">
+        <img src="../assets/Guide%20Photos/Midtown-4.jpg" alt="Midtown OKC" loading="lazy">
+      </div>
+      <p class="district-desc">Packed with restaurants, shopping, and bars, Midtown is one of the most popular districts in OKC. Walking distance from several apartments and neighborhoods, it's a great place to grab a bite or happy hour. Pick a song on the Jukebox in the back room at R&amp;J Lounge!</p>
+      <div class="district-grid">
+        <div class="cat"><h4>Shopping</h4><ul><li>Common Place Books</li><li>Chirps &amp; Cheers</li><li>Barkeep</li><li>Opolis Clothing</li><li>The Factory</li></ul></div>
+        <div class="cat"><h4>Dining</h4><ul><li>McNellie's</li><li>The Collective</li><li>Barrios</li><li>Packards</li></ul></div>
+        <div class="cat"><h4>Dining</h4><ul><li>Hall's Pizza</li><li>Waffle Champion</li><li>GoGo Sushi</li><li>Tamashii Ramen</li><li>Nonesuch</li></ul></div>
+        <div class="cat"><h4>Bars</h4><ul><li>R&amp;J Lounge</li><li>Fassler Hall</li><li>Elk Valley</li></ul></div>
+      </div>
+      <div class="district-grid" style="margin-top:1rem;">
+        <div class="cat"><h4>Drinks</h4><ul><li>Clarity Coffee</li><li>Elemental Coffee</li><li>Plant Smoothies</li><li>Joe's Coffee</li></ul></div>
+        <div class="cat"><h4>Dining</h4><ul><li>City Garden</li><li>Neighborhood JAM</li><li>Nic's Place</li><li>The Garage</li></ul></div>
+        <div class="cat"><h4>Sweets</h4><ul><li>Brown's Bakery</li><li>Insomnia Cookies</li><li>Harvey Bakery</li></ul></div>
+      </div>
+    </div>
+
+    <!-- #7 DOWNTOWN -->
+    <div class="district" data-anim="slide-left" id="downtown">
+      <div class="district-header">
+        <span class="district-num">Number Seven</span>
+        <h3>Downtown</h3>
+      </div>
+      <div class="district-img">
+        <img src="../assets/Guide%20Photos/PJ-BX276A_oklah_G_20140919171758.jpg" alt="Downtown OKC skyline" loading="lazy">
+      </div>
+      <p class="district-desc">While many out-of-towners think of downtown OKC as just 'Bricktown', there is so much more to see/do in the heart of the city! Be a part of the hustle and bustle while getting a feel for what makes Oklahoma City great! If this is your first time to OKC, we recommend that you check out the bombing memorial. It tells the story of one of the most historic and painful events in our city and remembers the victims and first responders. The memorial is full of rich history, heart, and passion for the City. It reminds us that we are people who deeply care for one another.</p>
+      <div class="district-grid">
+        <div class="cat"><h4>Dining</h4><ul><li>Flint</li><li>Mahogany Prime</li><li>Museum Cafe</li><li>Cafe 110</li></ul></div>
+        <div class="cat"><h4>Dining</h4><ul><li>Kitchen 324</li><li>Patrona</li><li>Vast</li><li>Sunnyside Diner</li></ul></div>
+        <div class="cat"><h4>Parks</h4><ul><li>Myriad Gardens</li><li>Bicentennial Park</li><li>Kerr Park</li><li>Red Andrews</li></ul></div>
+        <div class="cat"><h4>Coffee</h4><ul><li>Clarity Coffee</li><li>StellaNova</li><li>Junction Coffee</li><li>Park Grounds</li></ul></div>
+      </div>
+    </div>
+
+    <!-- #8 BOATHOUSE DISTRICT -->
+    <div class="district" data-anim="slide-right" id="boathouse">
+      <div class="district-header">
+        <span class="district-num">#8</span>
+        <h3>Boathouse District</h3>
+      </div>
+      <div class="district-photos">
+        <img src="../assets/Guide%20Photos/5gs9775-boathouse-hero.jpg" alt="Boathouse District" loading="lazy">
+        <img src="../assets/Guide%20Photos/160507_Riversport_Rapids_Olympic_Trials_raft_skyline__jsv-1.jpg" alt="Riversport Rapids" loading="lazy">
+      </div>
+      <p class="district-desc">Enjoy getting on the water in a kayak, take a bike ride on the 13+ miles of trails, enjoy RiverSport Adventures, or check out whitewater rafting and tubing in RiverSport Rapids. You'll also find Surf OKC &amp; Ski OKC! With so much to do, you will definitely want to make a weekend out of this district. Bar K, a dog friendly bar also hosts many fun gatherings along the river!</p>
+      <div class="district-grid">
+        <div class="cat"><h4>Experiences</h4><ul><li>Surf OKC</li><li>Ski OKC</li><li>Rafting</li><li>Kayaking</li></ul></div>
+        <div class="cat"><h4>Shopping</h4><ul><li>Sky Trail</li><li>Paddle Boards</li><li>Tubing</li><li>Bike Park</li></ul></div>
+      </div>
+    </div>
+
+    <!-- #9 FILM ROW -->
+    <div class="district" data-anim="slide-left" id="film-row">
+      <div class="district-header">
+        <span class="district-num">number nine</span>
+        <h3>Film Row</h3>
+      </div>
+      <div class="district-img">
+        <img src="../assets/Guide%20Photos/_K2A9743_Film-Row_20141017.jpg" alt="Film Row District" loading="lazy">
+      </div>
+      <p class="district-desc">In the 1930s, Sheridan Avenue was the destination for theater owners looking to screen and lease films for their movie houses. Dubbed "Film Row," it was home to notable film companies like Paramount Pictures, MGM, Universal, Fox and Warner Brothers. It has since seen new life with popular restaurants and nightlife. One of our personal favorites is a little wine bar called "The Study" with 64 bottles of wine on tap! Great for a small get-together with friends or date night.</p>
+      <div class="district-grid">
+        <div class="cat"><h4>Other</h4><ul><li>The Social Club</li><li>The Plant Shoppe</li><li>George's Liquor</li></ul></div>
+        <div class="cat"><h4>Sweets</h4><ul><li>Cael's Sweets</li><li>Perets Desserts</li><li>Cafe Disco</li></ul></div>
+        <div class="cat"><h4>Dining</h4><ul><li>Jones Assembly</li><li>Stitch Cafe</li><li>Mary Eddy's</li><li>Joey's Pizza</li><li>Big Biang Theory</li></ul></div>
+        <div class="cat"><h4>Bars</h4><ul><li>Bar Arbolada</li><li>The Study</li><li>FlashBack Retro Pub</li><li>Stonecloud Brewery</li></ul></div>
+      </div>
+    </div>
+
+    <!-- #10 ASIAN DISTRICT -->
+    <div class="district" data-anim="slide-right" id="asian-district">
+      <div class="district-header">
+        <span class="district-num">#10</span>
+        <h3>The Asian District</h3>
+      </div>
+      <div class="district-img">
+        <img src="../assets/Guide%20Photos/18-09-Sept-Feature-AsianDistrict-017.jpg" alt="Asian District" loading="lazy">
+      </div>
+      <p class="district-desc">Oklahoma City's foodie scene is alive and well in the Asian District, where an influx of Vietnamese immigrants in the 1970s created a hub now known for its Asian fusion cuisine. Here you will find some of the best Asian restaurants in OKC!</p>
+      <div class="district-grid">
+        <div class="cat"><h4>Dining</h4><ul><li>Pho Lien Hoa</li><li>Teapioca Lounge</li><li>Lido</li><li>Szechuan Story</li></ul></div>
+        <div class="cat"><h4>Dining</h4><ul><li>Golden Phoenix</li><li>Pho Cuong</li><li>Sala Thai</li><li>Lee's Sandwiches</li></ul></div>
+        <div class="cat"><h4>Non Asian Dining</h4><ul><li>Seafood Party</li><li>Neptune Sandwiches</li><li>Cafe Kacao</li><li>La Brasa</li></ul></div>
+      </div>
+    </div>
+
+    <!-- QUOTE: HOYT AXTON -->
+    <div class="quote-break quote-break--inline" data-anim="fade">
+      <div class="quote-img">
+        <img src="../assets/Guide%20Photos/cecb4013827c9666a47aa1b71fc9ff7263b4c6bae8cb1b6f532b1630ff440aea.jpg" alt="OKC Memorial at twilight" loading="lazy">
+      </div>
+      <div class="quote-side">
+        <img class="quote-icon" src="../assets/Brand%20Mark%201/Slate/Web/BrandMark1_Slate.png" alt="" loading="lazy">
+        <blockquote>Well, I never been to heaven but I been to Oklahoma.</blockquote>
+        <cite>Hoyt Axton</cite>
+      </div>
+    </div>
+
+    <!-- #11 ADVENTURE DISTRICT -->
+    <div class="district" data-anim="slide-left" id="adventure-district">
+      <div class="district-header">
+        <span class="district-num">Number Eleven</span>
+        <h3>Adventure District</h3>
+      </div>
+      <div class="district-photos">
+        <img src="../assets/Guide%20Photos/zoo_entrance.jpg" alt="OKC Zoo" loading="lazy">
+        <img src="../assets/Guide%20Photos/national-cowboy-western-heritage-museum-08.jpg" alt="Cowboy & Western Museum" loading="lazy">
+      </div>
+      <p class="district-desc">Home to some of the most outstanding tourist attractions in Oklahoma, experience all that the Adventure District has to offer. Make memories with your family at one of our many museums or take an exciting journey through science!</p>
+      <div class="district-grid">
+        <div class="cat"><h4>Activities</h4><ul><li>OKC Zoo</li><li>Science Museum</li><li>USA Softball HOF</li><li>Remington Park</li></ul></div>
+        <div class="cat"><h4>Activities</h4><ul><li>Zoo Amphitheatre</li><li>Cole's Garden</li><li>Lincoln Park Golf Course</li><li>Cowboy &amp; Western Museum</li></ul></div>
+      </div>
+    </div>
+
+    <!-- #12 DEEP DEUCE -->
+    <div class="district" data-anim="slide-right" id="deep-deuce">
+      <div class="district-header">
+        <span class="district-num">#12</span>
+        <h3>Deep Deuce</h3>
+        <p class="tagline">Historic Jazz District</p>
+      </div>
+      <div class="district-photos">
+        <img src="../assets/Guide%20Photos/deep-deuce-at-bricktown-oklahoma-city-ok-building-photo.jpg" alt="Deep Deuce buildings" loading="lazy">
+        <img src="../assets/Guide%20Photos/Wedge_Pizzeria_70eee3a0-3263-4683-a22b-6c45af94abd5.png" alt="The Wedge Pizzeria" loading="lazy">
+      </div>
+      <p class="district-desc">The Deep Deuce is a historical neighborhood in Oklahoma City that has been home to many Black cultural contributions and become an important hub for blues musicians throughout much of 20th century. Now a vibrant residential community with restaurants, bars, and walking distance to all of Downtown.</p>
+      <div class="district-grid">
+        <div class="cat"><h4>Dining</h4><ul><li>Bar Cicchetti</li><li>Deep Deuce Grill</li><li>The Wedge</li></ul></div>
+        <div class="cat"><h4>Dining</h4><ul><li>Black Walnut</li><li>Parlor <small>(great food court)</small></li></ul></div>
+      </div>
+    </div>
+
+    <!-- #13 BRICKTOWN -->
+    <div class="district" data-anim="slide-left" id="bricktown">
+      <div class="district-header">
+        <span class="district-num">Number Thirteen</span>
+        <h3>Bricktown</h3>
+      </div>
+      <div class="district-img">
+        <img src="../assets/Guide%20Photos/1170716629.jpg" alt="Bricktown canal at sunset" loading="lazy">
+      </div>
+      <p class="district-desc">Bricktown is a thriving urban area that has more than 45 restaurants, bars, and retail shops along with family-friendly attractions. The diversity here makes it one of OKC's most distinct historic districts where you can find everything from art galleries, comedy shows, baseball games, concerts, or there's always the outdoor beach (that actually opens during summer) right nearby too. If you're into golf, check out The Joinery Golf Simulator Bar!</p>
+      <div class="district-grid">
+        <div class="cat"><h4>Bars</h4><ul><li>Piano Bar</li><li>Skinny Slims</li><li>The Joinery</li><li>Cowboy Ranch</li></ul></div>
+        <div class="cat"><h4>Dining</h4><ul><li>Bricktown Brewery</li><li>Fuzzy's Tacos</li><li>All About Cha</li><li>Toby Keith's</li></ul></div>
+        <div class="cat"><h4>Other</h4><ul><li>Texadelphia</li><li>The Mantel</li><li>Tiff's Treats</li><li>The Melting Pot</li></ul></div>
+      </div>
+    </div>
+
+    <!-- #14 AUTOMOBILE ALLEY -->
+    <div class="district" data-anim="slide-right" id="auto-alley">
+      <div class="district-header">
+        <span class="district-num">Number Fourteen</span>
+        <h3>Automobile Alley</h3>
+      </div>
+      <div class="district-photos">
+        <img src="../assets/Guide%20Photos/8th_street_market_1.jpg" alt="8th Street Market" loading="lazy">
+        <img src="../assets/Guide%20Photos/ar_destination_automobile_alley_01.jpg" alt="Automobile Alley" loading="lazy">
+      </div>
+      <p class="district-desc">The Automobile Alley district is a fascinating mix of history and modern flare. Along Broadway Avenue, you'll find some of Oklahoma City's best restaurants and shops with neon signs from the old days hanging around to remind us how it all began here in this cool little spot on our downtown map! Be sure to check out Factory Obscura just off of 9th St. for a one-of-a-kind immersive experience.</p>
+      <div class="district-grid">
+        <div class="cat"><h4>Shopping</h4><ul><li>OK Runner</li><li>Plenty Mercantile</li><li>Shop Good</li><li>OK Collective</li></ul></div>
+        <div class="cat"><h4>Dining</h4><ul><li>Broadway 10</li><li>Hideaway Pizza</li><li>Iguana Grill</li><li>Jimmy B's</li></ul></div>
+        <div class="cat"><h4>Dining</h4><ul><li>Kamp's 1910</li><li>Nashbird</li><li>Parlor OKC</li><li>Red Prime</li></ul></div>
+        <div class="cat"><h4>Coffee</h4><ul><li>EOTE</li><li>Coffee Slingers</li><li>Prelude</li><li>Katiebug's</li></ul></div>
+      </div>
+    </div>
+
+    <!-- #15 WHEELER DISTRICT -->
+    <div class="district" data-anim="slide-left" id="wheeler-district">
+      <div class="district-header">
+        <span class="district-num">number fifteen</span>
+        <h3>Wheeler District</h3>
+      </div>
+      <div class="district-photos">
+        <img src="../assets/Guide%20Photos/download%20(9).jpg" alt="OKC sign and Ferris wheel" loading="lazy">
+        <img src="../assets/Guide%20Photos/wheeler-homes-Victor-Dover.jpg" alt="Wheeler District homes" loading="lazy">
+      </div>
+      <p class="district-desc">As a historic downtown airpark, the modern development offers residents varied housing options in a walkable and bikeable community. You can explore the shops, public parks with views of the city skyline as well other unique locations throughout! Wheeler is also home to the historic Santa Monica Pier Ferris Wheel. Overlooking the downtown skyline, the Wheeler Ferris Wheel stands 100 feet above the South bank of the Oklahoma River.</p>
+      <div class="district-grid" style="grid-template-columns:1fr;">
+        <div class="cat"><h4>Shops &bull; Bars &bull; Dining</h4>
+          <ul>
+            <li>The Big Friendly Brewery</li>
+            <li>Taco Nation</li>
+            <li>American Gothic Pizza</li>
+            <li>Thrown Design &amp; Wine</li>
+            <li>Clarity Coffee</li>
+            <li>The Ferris Wheel</li>
+            <li>Wheeler Crit Racing (Seasonal)</li>
+            <li>Akai Sushi</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- #16 FARMERS MARKET -->
+    <div class="district" data-anim="slide-right" id="farmers-market">
+      <div class="district-header">
+        <span class="district-num">Number Sixteen</span>
+        <h3>The Farmers Market</h3>
+      </div>
+      <div class="district-img">
+        <img src="../assets/Guide%20Photos/Uptown_Farmers_Market-15.jpg" alt="OKC Farmers Market" loading="lazy">
+      </div>
+      <p class="district-desc">Sitting on over 6 acres with the main building boasting 15,000 sq. ft, this pocket of OKC has seen new life in recent years, hosting events, weddings, &amp; more. Check out the Saturday farmers market weekly from 9:00-2:00 or grab a drink at one of the several watering holes!</p>
+      <div class="district-grid">
+        <div class="cat"><h4>Bars</h4><ul><li>Palo Santo</li><li>Powerhouse</li><li>Lively Brewery</li><li>Angry Scotsman</li><li>Anthem Brewing</li></ul></div>
+        <div class="cat"><h4>Dining</h4><ul><li>The Loaded Bowl</li><li>Sweis Greek Cafe</li></ul></div>
+        <div class="cat"><h4>Other</h4><ul><li>Bad Axe Throwing</li><li>Native Meat Co.</li><li>Trade Supply</li><li>Silo Gifts</li><li>Urban Agrarian</li></ul></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== ANNUAL EVENTS ==================== -->
+<section class="section-white" id="events">
+  <div class="container">
+    <div class="section-header" data-anim="fade-up">
+      <h2>Annual Events<br>in OKC</h2>
+      <span class="sub">A few of our favorites</span>
+    </div>
+    <div class="district-img" data-anim="scale-up" style="margin-bottom:2rem;">
+      <img src="../assets/Guide%20Photos/oklahoma-city-memorial-marathon-web.jpg" alt="OKC Memorial Marathon" loading="lazy">
+    </div>
+    <div class="event-list" data-stagger>
+      <div class="event-item"><span>OKC Memorial Marathon</span><span class="month">April</span></div>
+      <div class="event-item"><span>Paseo Arts Festival</span><span class="month">May</span></div>
+      <div class="event-item"><span>Festival of the Arts</span><span class="month">April</span></div>
+      <div class="event-item"><span>Red Earth Festival</span><span class="month">June &amp; July</span></div>
+      <div class="event-item"><span>Oklahoma State Fair</span><span class="month">September</span></div>
+      <div class="event-item"><span>Plaza District Festival</span><span class="month">October</span></div>
+      <div class="event-item"><span>Fright Fest</span><span class="month">October</span></div>
+      <div class="event-item"><span>Opening Night</span><span class="month">NYE</span></div>
+      <div class="event-item"><span>&amp; So Many More</span><span class="month"></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== DOG FRIENDLY ==================== -->
+<section class="section-cream" id="dog-friendly">
+  <div class="container">
+    <div class="section-header" data-anim="fade-up">
+      <h2>Dog Friendly</h2>
+      <span class="sub">Patio Vibes</span>
+    </div>
+    <div data-anim="fade-up">
+      <p class="dog-desc">If you are looking for the perfect place to hang with your pup, look no further! OKC is becoming increasingly more dog friendly with new places opening with great patios! Bar K is one of our personal favorite places to take our dog. You can also head north to Red Solo Pup to enjoy a drink while your dog gets to play!</p>
+      <p class="dog-desc">And yes, we are the proud parents of Henry (our son) and Rory (our Bernedoodle)!</p>
+      <div class="fav-grid" style="margin-top:2rem;">
+        <div class="fav-cat">
+          <h4>Coffee</h4>
+          <ul><li>Classen Coffee</li><li>Elemental Coffee</li><li>Neon Coffee</li><li>Prelude Coffee</li></ul>
+        </div>
+        <div class="fav-cat">
+          <h4>Bars</h4>
+          <ul><li>The Big Friendly</li><li>Fassler Hall</li><li>Oak &amp; Ore</li><li>Prairie Artisan Ales</li></ul>
+        </div>
+        <div class="fav-cat">
+          <h4>Bars</h4>
+          <ul><li>The Pump</li><li>Saint's</li><li>Social Capital</li><li>Stonecloud Brewery</li></ul>
+        </div>
+        <div class="fav-cat">
+          <h4>Dining</h4>
+          <ul><li>Big Truck Tacos</li><li>City Garden</li><li>The Collective</li><li>The Garage</li></ul>
+        </div>
+        <div class="fav-cat">
+          <h4>Dining</h4>
+          <ul><li>Lua</li><li>McNellie's</li><li>The Press</li><li>Taco Nation</li></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== OKC CHECKLIST ==================== -->
+<section class="section-white" id="checklist">
+  <div class="container">
+    <div class="section-header" data-anim="fade-up">
+      <h2>The OKC Checklist</h2>
+    </div>
+    <div class="checklist-progress" data-anim="fade-up" id="checklistProgress">
+      <span class="count" id="checkCount">0</span>
+      <span class="label"> / <span id="checkTotal">0</span> visited</span>
+      <div class="bar"><div class="bar-fill" id="checkBar" style="width:0%"></div></div>
+    </div>
+
+    <!-- DINING -->
+    <div class="checklist-cat" data-anim="fade-up">
+      <h4>Dining</h4>
+      <div class="checklist-items" id="cl-dining">
+      </div>
+    </div>
+
+    <!-- BAKERIES -->
+    <div class="checklist-cat" data-anim="fade-up">
+      <h4>Bakeries &amp; Desserts</h4>
+      <div class="checklist-items" id="cl-bakeries">
+      </div>
+    </div>
+
+    <!-- COFFEE -->
+    <div class="checklist-cat" data-anim="fade-up">
+      <h4>Coffee Shops</h4>
+      <div class="checklist-items" id="cl-coffee">
+      </div>
+    </div>
+
+    <!-- PARKS -->
+    <div class="checklist-cat" data-anim="fade-up">
+      <h4>Parks</h4>
+      <div class="checklist-items" id="cl-parks">
+      </div>
+    </div>
+
+    <!-- BARS -->
+    <div class="checklist-cat" data-anim="fade-up">
+      <h4>Bars</h4>
+      <div class="checklist-items" id="cl-bars">
+      </div>
+    </div>
+
+    <p class="checklist-note">*Better for Date Night</p>
+  </div>
+</section>
+
+<!-- ==================== STAYING CONNECTED ==================== -->
+<section class="section-cream" id="connected">
+  <div class="container">
+    <div class="section-header" data-anim="fade-up">
+      <h2>Staying Connected</h2>
+    </div>
+    <div class="connected-grid" data-anim="fade-up">
+      <div class="connected-text">
+        <p>If you cannot tell, we LOVE living in Oklahoma City! Whether you are brand new to OKC or coming back to the area, we hope this guide helps you fall in love with the city + the people + the food + the culture.</p>
+        <p>If you are needing recommendations on anything (hairdressers, doctors, babysitters), do not hesitate to reach out! We would love to share with you our personal favorites.</p>
+        <p>Follow us on social for more updates on OKC events/activities. We are so glad that you have chosen to call Oklahoma City "Home".</p>
+        <div class="connected-social">
+          <h4>Follow Our Journey Online</h4>
+          <p>Instagram &amp; Facebook: <a href="https://instagram.com/vanhornhomes" target="_blank">@vanhornhomes</a></p>
+          <p>Our Website: <a href="https://ccvanhorn.com" target="_blank">ccvanhorn.com</a></p>
+        </div>
+      </div>
+      <div class="connected-photos">
+        <img src="../assets/Guide%20Photos/image%20(7).png" alt="The Van Horn family" loading="lazy">
+        <img src="../assets/Guide%20Photos/IMG_6712%20(2).png" alt="Claire and Caleb" loading="lazy">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== FOOTER ==================== -->
+<footer class="site-footer">
+  <img class="footer-logo" src="../assets/Primary%20Logo/White/Web/PrimaryLogo_White.png" alt="Van Horn Homes" loading="lazy">
+  <p class="footer-tagline">OK City / Metro &bull; Real Estate</p>
+  <div class="footer-contact">
+    <p>405.353.0098</p>
+    <p><a href="https://ccvanhorn.com" style="color:var(--white);">ccvanhorn.com</a></p>
+    <p><a href="https://instagram.com/vanhornhomes" style="color:var(--white);">@vanhornhomes</a></p>
+    <p><a href="mailto:hello@ccvanhorn.com" style="color:var(--white);">hello@ccvanhorn.com</a></p>
+  </div>
+  <p class="footer-brokerage">Keller Williams Realty Elite</p>
+</footer>
+
+<!-- NEIGHBORHOOD INFO DRAWER -->
+<div class="hood-drawer-backdrop" id="hoodDrawerBackdrop"></div>
+<div class="hood-drawer" id="hoodDrawer" role="dialog" aria-label="Neighborhood details">
+  <div class="hood-drawer-handle"></div>
+  <button class="hood-drawer-close" id="hoodDrawerClose" aria-label="Close">&times;</button>
+  <div class="hood-drawer-body" id="hoodDrawerBody"></div>
+</div>
+
+</div><!-- end #guide-content -->
+
+<!-- ACCESS GATE SCRIPT -->
+<script>
+(function(){
+  var params = new URLSearchParams(window.location.search);
+  var hasToken = params.get('ref') === 'registered';
+  var hasLocal = localStorage.getItem('vhh-guide-access') === 'true';
+  if (hasToken || hasLocal) {
+    if (hasToken) {
+      localStorage.setItem('vhh-guide-access', 'true');
+      params.delete('ref');
+      var clean = window.location.pathname + (params.toString() ? '?' + params : '');
+      history.replaceState(null, '', clean);
+    }
+    document.getElementById('access-gate').style.display = 'none';
+    document.getElementById('guide-content').style.display = 'block';
+  }
+})();
+</script>
+
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
+<script src="js/neighborhood-maps.js"></script>
+
+<script>
+// ===== TOC TOGGLE =====
+const tocBtn = document.getElementById('tocBtn');
+const tocOverlay = document.getElementById('tocOverlay');
+const tocClose = document.getElementById('tocClose');
+
+function openToc() { tocOverlay.classList.add('open'); tocBtn.classList.add('active'); document.body.style.overflow = 'hidden'; }
+function closeToc() { tocOverlay.classList.remove('open'); tocBtn.classList.remove('active'); document.body.style.overflow = ''; }
+tocBtn.addEventListener('click', () => tocOverlay.classList.contains('open') ? closeToc() : openToc());
+tocClose.addEventListener('click', closeToc);
+tocOverlay.addEventListener('click', (e) => { if (e.target === tocOverlay) closeToc(); });
+
+// ===== SCROLL ANIMATIONS =====
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// Intersection Observer for data-anim elements
+const animObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const delay = parseInt(entry.target.dataset.delay || 0);
+      if (delay > 0) {
+        setTimeout(() => entry.target.classList.add('visible'), delay);
+      } else {
+        entry.target.classList.add('visible');
+      }
+      animObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+
+document.querySelectorAll('[data-anim]').forEach(el => animObserver.observe(el));
+
+// Stagger observer: when container enters view, stagger-reveal children
+const staggerObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      const children = entry.target.children;
+      Array.from(children).forEach((child, i) => {
+        child.style.transitionDelay = (i * 40) + 'ms';
+      });
+      staggerObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.08 });
+
+document.querySelectorAll('[data-stagger]').forEach(el => staggerObserver.observe(el));
+
+// Legacy fade-in support
+const legacyObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      legacyObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.fade-in').forEach(el => legacyObserver.observe(el));
+
+// ===== PARALLAX ON SCROLL =====
+if (!prefersReducedMotion) {
+  // Slow zoom on hero background image
+  const heroBg = document.querySelector('.hero-bg img');
+  // Parallax on quote break images
+  const quoteImgs = document.querySelectorAll('.quote-img img');
+
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(() => {
+        const scrollY = window.scrollY;
+        const vh = window.innerHeight;
+
+        // Hero: slow zoom as you scroll down
+        if (heroBg) {
+          const heroProgress = Math.min(scrollY / vh, 1);
+          const heroScale = 1 + heroProgress * 0.15;
+          heroBg.style.transform = `scale(${heroScale})`;
+        }
+
+        // Quote images: subtle parallax shift
+        quoteImgs.forEach(img => {
+          const rect = img.getBoundingClientRect();
+          if (rect.top < vh && rect.bottom > 0) {
+            const progress = (vh - rect.top) / (vh + rect.height);
+            const shift = (progress - 0.5) * 40;
+            img.style.transform = `translateY(${shift}px) scale(1.05)`;
+          }
+        });
+
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }, { passive: true });
+}
+
+// ===== CHECKLIST DATA & LOGIC =====
+const checklistData = {
+  dining: [
+    "All About Cha","Aurora","Back Door BBQ","Bar Cicchetti*","Barrios",
+    "Big Truck Tacos","Black Walnut*","The Blok","Braum's","Bricktown Brewery",
+    "Broadway 10*","Cafe 110","Cafe Kacao","Cajun Corner","Cattleman's Steakhouse",
+    "Cheever's Cafe*","Chick-N-Beer","Akai (Wheeler District)","The Collective",
+    "Deep Deuce Grill","The Drake*","Edge Craft BBQ","Empire Pizza","Flint*",
+    "Flower Child","Frida Southwest*","Fuzzy's Tacos","The Garage","GoGo Sushi",
+    "Golden Phoenix","Goro Ramen","Grey Sweater*","Hall's Pizza","Harvey Bakery",
+    "Hideaway Pizza","HunnyBunny Biscuit","Iguana Grill","Iron Star Urban BBQ",
+    "Jimmy B's*","Joey's Pizza","The Jones Assembly","Kamp's 1910","Kitchen 324",
+    "La Brasa","Lee's Sandwiches","Leo's BBQ","Lido","Lua","Ludivine*",
+    "Mahogany Prime*","The Mantel*","Mary Eddy's*","McNellie's Pub","Mexican Radio",
+    "Museum Cafe","Musashi's","Nashbird","Neighborhood JAM","Neptune Sandwiches",
+    "New State Burger","Nonesuch*","Osteria*","Packard's","The Parlor",
+    "Paseo Grill*","Patrona*","Pho Cuong","Pho Lien Hoa","Picasso Cafe",
+    "Pizzeria Gusto","The Press","Red Prime*","Sala Thai","Saturn Grill",
+    "Seafood Party","Sonic Drive-In (Split-T)","Stitch Cafe","Sunnyside Diner",
+    "Sushi Neko","Szechuan Story","Taco Nation","Tamashii Ramen","Toby Keith's",
+    "Torchy's","Vast*","VZD's","Waffle Champion","Wedge Pizzeria"
+  ],
+  bakeries: [
+    "Brown's Bakery","Cael's Sweets","Cafe Disco","Capitals Ice Cream",
+    "Insomnia Cookies","The Melting Pot","Perets Desserts","Pie Junkie","Tiff's Treats"
+  ],
+  coffee: [
+    "Clarity","Classen Coffee","Coffee Jerks","Coffee Slingers","Elemental",
+    "EOTE","Ground Floor Cafe","Junction","Katiebug's","Neon Coffee",
+    "Not Your Average Joe's","Park Grounds","Prelude","Sincerely","Stella Nova"
+  ],
+  parks: [
+    "Edgemere Park","Grand Boulevard Park","Hefner Park","Horn Park",
+    "Memorial Park","Myriad Gardens","Pearle Mesta Park","Scissortail Park",
+    "Will Rogers Park"
+  ],
+  bars: [
+    "Angry Scotsman Brewing","Anthem Brewing","Bar Arbolada","The Big Friendly Brewery",
+    "The Bunker Club","Cookie's Karaoke","Core 4 Brewing","Cowboy Ranch",
+    "The Daley","Edna's","The Eleanor","Elk Valley Brewing","Fassler Hall",
+    "FlashBack Retro Pub","The Joinery","Kong's","Lively Beer Works",
+    "McClintock Saloon","Michael Murphy's Piano Bar","Oak & Ore","Palo Santo",
+    "Paseo Daiquiri","Ponyboy","Power House","Prairie Artisan Ales","The Pump",
+    "R&J Lounge","Red Rooster","Saint's","Scratch","Sidecar","Skinny Slims",
+    "Skydance Brewing","Social Capital","Stonecloud Brewery","The Study",
+    "Sunset Patio","Twisted Spike","Up-Down","Vanessa House"
+  ]
+};
+
+const STORAGE_KEY = 'vhh-okc-checklist';
+
+function loadChecked() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch { return {}; }
+}
+function saveChecked(data) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+function renderChecklist() {
+  const checked = loadChecked();
+  let totalItems = 0;
+  Object.entries(checklistData).forEach(([category, items]) => {
+    const container = document.getElementById('cl-' + category);
+    if (!container) return;
+    container.innerHTML = '';
+    items.forEach(item => {
+      totalItems++;
+      const id = category + '-' + item.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+      const isChecked = checked[id] || false;
+      const div = document.createElement('label');
+      div.className = 'check-item' + (isChecked ? ' checked' : '');
+      div.innerHTML = `<input type="checkbox" data-id="${id}" ${isChecked ? 'checked' : ''}><span>${item}</span>`;
+      container.appendChild(div);
+    });
+  });
+  document.getElementById('checkTotal').textContent = totalItems;
+  updateProgress();
+}
+
+function updateProgress() {
+  const checked = loadChecked();
+  const count = Object.values(checked).filter(Boolean).length;
+  let total = 0;
+  Object.values(checklistData).forEach(items => total += items.length);
+  document.getElementById('checkCount').textContent = count;
+  document.getElementById('checkBar').style.width = (total > 0 ? (count / total * 100) : 0) + '%';
+}
+
+document.addEventListener('change', (e) => {
+  if (e.target.type === 'checkbox' && e.target.dataset.id) {
+    const checked = loadChecked();
+    checked[e.target.dataset.id] = e.target.checked;
+    saveChecked(checked);
+    e.target.closest('.check-item').classList.toggle('checked', e.target.checked);
+    updateProgress();
+  }
+});
+
+renderChecklist();
+</script>
+</body>
+</html>
